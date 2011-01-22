@@ -19,6 +19,7 @@ alt = ('Alt', 0.3)
 win = ('Win', 0.3)
 menu = ('Menu', 0.3)
 
+n130_gap = 0.12
 n130_keyboard = {
  'keys': [
   [s.grave, s._1, s._2, s._3, s._4, s._5, s._6, s._7, s._8, s._9, s._0, s.minus, s.equal, backspace],
@@ -27,7 +28,7 @@ n130_keyboard = {
   [shift,       s.z,  s.x,  s.c,  s.v,  s.b,  s.n,  s.m,  cma,  prd,  slh,  shift],
   [ctrl,    fnkey, win,  alt,         s.space,        alt,  menu, ctrl]
  ],
- 'gap': 0.08,
+ 'gap': n130_gap,
  'sizes': {
     (0, 0): 0.7,
     (0, 13): -1,
@@ -36,12 +37,12 @@ n130_keyboard = {
     (3, 0): 1.85,
     (3, 11): -1,
     (4, 0): 1.3,
-    (4, 4): 4 + 3*0.08,
+    (4, 4): 6 + 5*n130_gap,
     (4, 7): -1,
  },
  'offsets': {},
- 'width': 14 + 13*0.08,
- 'height': 5 + 4*0.08,
+ 'width': 14 + 13*n130_gap,
+ 'height': 5 + 4*n130_gap,
  'zones': [
     ([3, 4, 5, 7, 8, 9, 10, 13], [1, 2, 3, 4, 5, 1, 2, 3, 0]),
     ([1, 2, 3, 4, 6, 8, 9, 10], [0, 1, 2, 3, 4, 5, 1, 2, 3]),
