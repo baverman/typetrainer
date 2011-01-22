@@ -16,11 +16,19 @@ def attach_glade(obj, filename, *names):
 class Main(object):
     """glade-file: main.glade"""
 
-    def __init__(self, filler):
+    def __init__(self, filler, kbd_drawer):
         self.filler = filler
+        self.kbd_drawer = kbd_drawer
 
         attach_glade(self, os.path.join(os.path.dirname(__file__), 'main.glade'),
-            'window', 'totype_entry', 'type_entry', 'cpm_lb', 'accuracy_lb')
+            'window', 'totype_entry', 'type_entry', 'cpm_lb', 'accuracy_lb', 'vbox1')
+
+        self.window.connect('key-release-event', self.on_key_event)
+        self.window.connect('key-press-event', self.on_key_event)
+
+        self.vbox1.pack_start(self.kbd_drawer)
+        self.kbd_drawer.set_size_request(-1, 280)
+        self.kbd_drawer.show()
 
     def fill(self):
         self.type_entry.set_text('')
@@ -89,3 +97,7 @@ class Main(object):
                 '%d%%' % int((len(ref_text) - errors) * 100.0 / len(ref_text)))
 
         self.fill()
+
+    def on_key_event(self, window, event):
+        self.kbd_drawer.event(event)
+        return False

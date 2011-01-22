@@ -39,9 +39,13 @@ def run():
     import gtk
     import random
     import itertools
+    import collections
 
     from typetrainer.ui import idle
     from typetrainer.ui.main import Main
+    from typetrainer.ui.kbd import n130_keyboard, KeyboardDrawer
+
+    old_generated = collections.deque([], 100)
 
     def filler():
         pos = random.randint(0, len(lengths) - 1)
@@ -50,11 +54,15 @@ def run():
 
         for t, l in itertools.cycle(itertools.chain(left, right)):
             if t == 'w':
-                yield generate_word(first, other, l, 3)
+                word = generate_word(first, other, l, 3)
+                if word in old_generated:
+                    word = generate_word(first, other, l, 3)
+                old_generated.append(word)
+                yield word
             else:
                 yield l
 
-    app = Main(filler)
+    app = Main(filler, KeyboardDrawer(n130_keyboard))
     app.window.show()
     idle(app.fill)
 
