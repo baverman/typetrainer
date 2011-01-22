@@ -1,6 +1,8 @@
 Type Trainer
 ============
 
+.. image:: http://cloud.github.com/downloads/baverman/typetrainer/trainer.png
+
 This small utility allows you to grow your typing skills in soft and
 non-annoying manner. It tries to behave closely to proprietary VerseQ
 application -- adaptive typing tutor which dynamically changes exercises to help

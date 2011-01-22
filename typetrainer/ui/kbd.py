@@ -48,6 +48,9 @@ n130_keyboard = {
     ([1, 2, 3, 4, 6, 8, 9, 10, 12 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
     ([1, 2, 3, 4, 6, 8, 9, 10, 11 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
     ([4, 5], [0, 6, 0]),
+ ],
+ 'main_keys':[
+    (2,1), (2,2), (2,3), (2,4), (2,7), (2,8), (2,9), (2,10)
  ]
 }
 
@@ -114,13 +117,21 @@ class KeyboardDrawer(gtk.DrawingArea):
 
                 roundedrec(cr, x, y, w, h, 0.3)
 
-                cr.set_source_rgb(*button_colors[icolors[bisect(zones, n)]])
+                bg = button_colors[icolors[bisect(zones, n)]]
+
+                cr.set_source_rgb(*bg)
                 cr.fill_preserve()
 
+                cr.set_dash([])
                 cr.set_source_rgb(0.2, 0.2, 0.2)
                 cr.stroke()
 
                 self.draw_label(cr, keyval, x, y, w, h)
+
+                if (r, n) in self.kbd['main_keys']:
+                    smallrec(cr, x, y, w, h, 0.8)
+                    cr.set_dash([0.09, 0.05])
+                    cr.stroke()
 
                 x += w + self.kbd['gap']
 
@@ -185,3 +196,7 @@ def roundedrec(context, x, y, w, h, r = 10):
     context.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
     context.line_to(x,y+r)                      # Line to H
     context.curve_to(x,y,x,y,x+r,y)             # Curve to A
+
+def smallrec(cr, x, y, w, h, factor):
+    nw, nh = w*factor, h*factor
+    cr.rectangle(x + (w - nw) / 2.0, y + (h - nh) / 2.0, nw, nh)
