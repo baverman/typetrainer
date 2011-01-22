@@ -4,19 +4,28 @@ import gtk
 from gtk import keysyms as s
 
 brkl, brkr = s.bracketleft, s.bracketright
-caps = s.Caps_Lock
 smc = s.semicolon
 cma = s.comma
 prd = s.period
 slh = s.slash
+tab = ('Tab', 0.3)
+caps = ('Caps', 0.3)
+backspace = ('BS', 0.3)
+ret = ('Enter', 0.3)
+shift = ('Shift', 0.3)
+ctrl = ('Ctrl', 0.3)
+fnkey = ('Fn', 0.3)
+alt = ('Alt', 0.3)
+win = ('Win', 0.3)
+menu = ('Menu', 0.3)
 
 n130_keyboard = {
  'keys': [
-  [s.grave, s._1, s._2, s._3, s._4, s._5, s._6, s._7, s._8, s._9, s._0, s.minus, s.equal, s.BackSpace],
-  [s.Tab,    s.q,  s.w,  s.e,  s.r,  s.t,  s.y,  s.u,  s.i,  s.o,  s.p,  brkl,    brkr, s.backslash  ],
-  [caps,      s.a,  s.s,  s.d,  s.f,  s.g,  s.h,  s.j,  s.k,  s.l,  smc,  s.apostrophe, s.Return],
-  [s.Shift_L,   s.z,  s.x,  s.c,  s.v,  s.b,  s.n,  s.m,  cma,  prd,  slh,  s.Shift_R],
-  [                           s.space]
+  [s.grave, s._1, s._2, s._3, s._4, s._5, s._6, s._7, s._8, s._9, s._0, s.minus, s.equal, backspace],
+  [tab,      s.q,  s.w,  s.e,  s.r,  s.t,  s.y,  s.u,  s.i,  s.o,  s.p,  brkl,    brkr, s.backslash],
+  [caps,      s.a,  s.s,  s.d,  s.f,  s.g,  s.h,  s.j,  s.k,  s.l,  smc,  s.apostrophe, ret],
+  [shift,       s.z,  s.x,  s.c,  s.v,  s.b,  s.n,  s.m,  cma,  prd,  slh,  shift],
+  [ctrl,    fnkey, win,  alt, s.space,                alt,  menu, ctrl]
  ],
  'gap': 0.08,
  'sizes': {
@@ -26,11 +35,11 @@ n130_keyboard = {
     (2, 12): -1,
     (3, 0): 1.85,
     (3, 11): -1,
-    (4, 0): 4 + 5*0.08
+    (4, 0): 1.3,
+    (4, 4): 4 + 3*0.08,
+    (4, 7): -1,
  },
- 'offsets': {
-    (4, 0): 4.5
- },
+ 'offsets': {},
  'width': 14 + 13*0.08,
  'height': 5 + 4*0.08,
  'zones': [
@@ -38,7 +47,7 @@ n130_keyboard = {
     ([1, 2, 3, 4, 6, 8, 9, 10], [0, 1, 2, 3, 4, 5, 1, 2, 3]),
     ([1, 2, 3, 4, 6, 8, 9, 10, 12 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
     ([1, 2, 3, 4, 6, 8, 9, 10, 11 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
-    ([], [6]),
+    ([4, 5], [0, 6, 0]),
  ]
 }
 
@@ -85,7 +94,6 @@ class KeyboardDrawer(gtk.DrawingArea):
         cr.translate(lwidth / 2.0, lwidth / 2.0)
 
         cr.set_line_width(lwidth)
-        cr.set_font_size(0.5)
 
         y = 0.0
         for r, row in enumerate(self.kbd['keys']):
@@ -127,15 +135,21 @@ class KeyboardDrawer(gtk.DrawingArea):
         return entries[0][0]
 
     def draw_label(self, cr, keyval, x, y, w, h):
-        kmap = gtk.gdk.keymap_get_default()
-        keyval = kmap.translate_keyboard_state(
-            self.get_hcode(kmap, keyval), self.cur_state, self.group)[0]
+        if isinstance(keyval, tuple):
+            label = keyval[0]
+            cr.set_font_size(keyval[1])
+        else:
+            cr.set_font_size(0.5)
+            kmap = gtk.gdk.keymap_get_default()
+            keyval = kmap.translate_keyboard_state(
+                self.get_hcode(kmap, keyval), self.cur_state, self.group)[0]
 
-        ucode = gtk.gdk.keyval_to_unicode(keyval)
-        if not ucode:
-            return
+            ucode = gtk.gdk.keyval_to_unicode(keyval)
+            if not ucode:
+                return
 
-        label = unichr(ucode)
+            label = unichr(ucode)
+
         xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
         cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - ybearing - height / 2)
         cr.show_text(label)
