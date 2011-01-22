@@ -57,6 +57,5 @@ TODO
 ====
 
 * Word generator should take in action trainee errors.
-* On screen keyboard with finger zones.
 * Advanced tutor for English (will be done when I reach 250 cpm on basic level).
 * Python tutor.
