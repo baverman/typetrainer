@@ -25,7 +25,7 @@ n130_keyboard = {
   [tab,      s.q,  s.w,  s.e,  s.r,  s.t,  s.y,  s.u,  s.i,  s.o,  s.p,  brkl,    brkr, s.backslash],
   [caps,      s.a,  s.s,  s.d,  s.f,  s.g,  s.h,  s.j,  s.k,  s.l,  smc,  s.apostrophe, ret],
   [shift,       s.z,  s.x,  s.c,  s.v,  s.b,  s.n,  s.m,  cma,  prd,  slh,  shift],
-  [ctrl,    fnkey, win,  alt, s.space,                alt,  menu, ctrl]
+  [ctrl,    fnkey, win,  alt,         s.space,        alt,  menu, ctrl]
  ],
  'gap': 0.08,
  'sizes': {
@@ -69,9 +69,9 @@ class KeyboardDrawer(gtk.DrawingArea):
         self.kbd = kbd
         gtk.DrawingArea.__init__(self)
 
-        self.level = 0
         self.group = 0
         self.cur_state = 0
+        self.hcode_cache = {}
 
         self.connect('key-release-event', self.on_key_event)
         self.connect('key-press-event', self.on_key_event)
@@ -127,12 +127,20 @@ class KeyboardDrawer(gtk.DrawingArea):
             y += h + self.kbd['gap']
 
     def get_hcode(self, kmap, keyval):
+        try:
+            return self.hcode_cache[keyval]
+        except KeyError:
+            pass
+
         entries = kmap.get_entries_for_keyval(keyval)
         for code, group, level in entries:
             if level == group == 0:
-                return code
+                break
+        else:
+            code = entries[0][0]
 
-        return entries[0][0]
+        self.hcode_cache[keyval] = code
+        return code
 
     def draw_label(self, cr, keyval, x, y, w, h):
         if isinstance(keyval, tuple):
