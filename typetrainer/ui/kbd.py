@@ -170,9 +170,14 @@ class KeyboardDrawer(gtk.DrawingArea):
 
             label = unichr(ucode)
 
+        fascent, fdescent, fheight, fxadvance, fyadvance = cr.font_extents()
         xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
-        cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - ybearing - height / 2)
+        cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - fdescent + fheight / 2)
         cr.show_text(label)
+
+        #xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
+        #cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - ybearing - height / 2)
+        #cr.show_text(label)
 
     def on_key_event(self, widget, event):
         st = event.state
@@ -187,16 +192,16 @@ class KeyboardDrawer(gtk.DrawingArea):
         return False
 
 
-def roundedrec(context, x, y, w, h, r = 10):
-    context.move_to(x+r,y)                      # Move to A
-    context.line_to(x+w-r,y)                    # Straight line to B
-    context.curve_to(x+w,y,x+w,y,x+w,y+r)       # Curve to C, Control points are both at Q
-    context.line_to(x+w,y+h-r)                  # Move to D
-    context.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h) # Curve to E
-    context.line_to(x+r,y+h)                    # Line to F
-    context.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
-    context.line_to(x,y+r)                      # Line to H
-    context.curve_to(x,y,x,y,x+r,y)             # Curve to A
+def roundedrec(cr, x, y, w, h, r = 10):
+    cr.move_to(x+r, y)
+    cr.line_to(x+w-r, y)
+    cr.curve_to(x+w, y, x+w, y, x+w, y+r)
+    cr.line_to(x+w, y+h-r)
+    cr.curve_to(x+w, y+h, x+w, y+h, x+w-r, y+h)
+    cr.line_to(x+r, y+h)
+    cr.curve_to(x, y+h, x, y+h, x, y+h-r)
+    cr.line_to(x, y+r)
+    cr.curve_to(x, y, x, y, x+r, y)
 
 def smallrec(cr, x, y, w, h, factor):
     nw, nh = w*factor, h*factor
