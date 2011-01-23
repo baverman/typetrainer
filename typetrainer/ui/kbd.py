@@ -1,6 +1,6 @@
 from bisect import bisect
 
-import gtk
+import gtk, cairo
 from gtk import keysyms as s
 
 brkl, brkr = s.bracketleft, s.bracketright
@@ -80,6 +80,9 @@ class KeyboardDrawer(gtk.DrawingArea):
         self.connect('key-release-event', self.on_key_event)
         self.connect('key-press-event', self.on_key_event)
 
+        self.last_wh = -100, -100
+        self.predraw_cache = {}
+
     def do_expose_event(self, event):
         cr = self.window.cairo_create()
 
@@ -87,7 +90,20 @@ class KeyboardDrawer(gtk.DrawingArea):
                 event.area.width, event.area.height)
         cr.clip()
 
-        self.draw(cr, *self.window.get_size())
+        wh = self.window.get_size()
+        pk = self.group, self.cur_state
+
+        if wh != self.last_wh:
+            self.predraw_cache.clear()
+
+        if pk not in self.predraw_cache:
+            self.predraw_cache[pk] = cairo.ImageSurface(cairo.FORMAT_ARGB32, *wh)
+            mcr = cairo.Context(self.predraw_cache[pk])
+            self.draw(mcr, *wh)
+
+        self.last_wh = wh
+        cr.set_source_surface(self.predraw_cache[pk], 0, 0)
+        cr.paint()
 
     def draw(self, cr, width, height):
         kw = self.kbd['width']
@@ -174,10 +190,6 @@ class KeyboardDrawer(gtk.DrawingArea):
         xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
         cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - fdescent + fheight / 2)
         cr.show_text(label)
-
-        #xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
-        #cr.move_to(x + w / 2.0 - xbearing - width / 2, y + h / 2.0 - ybearing - height / 2)
-        #cr.show_text(label)
 
     def on_key_event(self, widget, event):
         st = event.state
