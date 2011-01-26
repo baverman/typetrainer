@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name     = 'typetrainer',
-    version  = '0.2',
+    version  = '0.2.1',
     author   = 'Anton Bobrov',
     author_email = 'bobrov@vl.ru',
     description = 'Typing tutor trainer',

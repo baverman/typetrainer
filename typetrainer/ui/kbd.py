@@ -3,11 +3,6 @@ from bisect import bisect
 import gtk, cairo
 from gtk import keysyms as s
 
-brkl, brkr = s.bracketleft, s.bracketright
-smc = s.semicolon
-cma = s.comma
-prd = s.period
-slh = s.slash
 tab = ('Tab', 0.3)
 caps = ('Caps', 0.3)
 backspace = ('BS', 0.3)
@@ -18,15 +13,16 @@ fnkey = ('Fn', 0.3)
 alt = ('Alt', 0.3)
 win = ('Win', 0.3)
 menu = ('Menu', 0.3)
+space = ('', 0.3)
 
 n130_gap = 0.12
 n130_keyboard = {
  'keys': [
-  [s.grave, s._1, s._2, s._3, s._4, s._5, s._6, s._7, s._8, s._9, s._0, s.minus, s.equal, backspace],
-  [tab,      s.q,  s.w,  s.e,  s.r,  s.t,  s.y,  s.u,  s.i,  s.o,  s.p,  brkl,    brkr, s.backslash],
-  [caps,      s.a,  s.s,  s.d,  s.f,  s.g,  s.h,  s.j,  s.k,  s.l,  smc,  s.apostrophe, ret],
-  [shift,       s.z,  s.x,  s.c,  s.v,  s.b,  s.n,  s.m,  cma,  prd,  slh,  shift],
-  [ctrl,    fnkey, win,  alt,         s.space,        alt,  menu, ctrl]
+  [49,   10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  backspace],
+  [tab,   24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  51],
+  [caps,   38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  ret],
+  [shift,    52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  shift],
+  [ctrl,    fnkey, win,  alt,         space,          alt,  menu, ctrl]
  ],
  'gap': n130_gap,
  'sizes': {
@@ -75,7 +71,6 @@ class KeyboardDrawer(gtk.DrawingArea):
 
         self.group = 0
         self.cur_state = 0
-        self.hcode_cache = {}
 
         self.connect('key-release-event', self.on_key_event)
         self.connect('key-press-event', self.on_key_event)
@@ -121,7 +116,7 @@ class KeyboardDrawer(gtk.DrawingArea):
             h = 1.0
             zones, icolors = self.kbd['zones'][r]
 
-            for n, keyval in enumerate(row):
+            for n, keycode in enumerate(row):
                 w = 1.0
 
                 if (r, n) in self.kbd['sizes']:
@@ -143,7 +138,7 @@ class KeyboardDrawer(gtk.DrawingArea):
                 cr.set_source_rgb(0.2, 0.2, 0.2)
                 cr.stroke()
 
-                self.draw_label(cr, keyval, x, y, w, h)
+                self.draw_label(cr, keycode, x, y, w, h)
 
                 if (r, n) in self.kbd['main_keys']:
                     smallrec(cr, x, y, w, h, 0.8)
@@ -154,31 +149,14 @@ class KeyboardDrawer(gtk.DrawingArea):
 
             y += h + self.kbd['gap']
 
-    def get_hcode(self, kmap, keyval):
-        try:
-            return self.hcode_cache[keyval]
-        except KeyError:
-            pass
-
-        entries = kmap.get_entries_for_keyval(keyval)
-        for code, group, level in entries:
-            if level == group == 0:
-                break
-        else:
-            code = entries[0][0]
-
-        self.hcode_cache[keyval] = code
-        return code
-
-    def draw_label(self, cr, keyval, x, y, w, h):
-        if isinstance(keyval, tuple):
-            label = keyval[0]
-            cr.set_font_size(keyval[1])
+    def draw_label(self, cr, keycode, x, y, w, h):
+        if isinstance(keycode, tuple):
+            label = keycode[0]
+            cr.set_font_size(keycode[1])
         else:
             cr.set_font_size(0.5)
             kmap = gtk.gdk.keymap_get_default()
-            keyval = kmap.translate_keyboard_state(
-                self.get_hcode(kmap, keyval), self.cur_state, self.group)[0]
+            keyval = kmap.translate_keyboard_state(keycode, self.cur_state, self.group)[0]
 
             ucode = gtk.gdk.keyval_to_unicode(keyval)
             if not ucode:

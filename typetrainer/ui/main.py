@@ -99,5 +99,6 @@ class Main(object):
         self.fill()
 
     def on_key_event(self, window, event):
+        #print event.hardware_keycode, unichr(gtk.gdk.keyval_to_unicode(event.keyval))
         self.kbd_drawer.event(event)
         return False
