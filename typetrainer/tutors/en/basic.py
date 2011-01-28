@@ -1,4 +1,5 @@
 import re
+from ..common import Filler
 
 def make_lengths_seq(words):
     for t, w in words:
@@ -22,3 +23,7 @@ def split_to_words(text):
                     yield 's', s
 
             yield 's', ' '
+
+def get_filler(text, options):
+    words = list(split_to_words(text))
+    return Filler(words, make_lengths_seq)

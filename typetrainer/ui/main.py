@@ -7,7 +7,7 @@ import pango
 
 RHITM_ERROR_THRESHOLD = 1.7
 RHITM_ERROR_FACTOR = 3.0
-ERROR_SINK_VALUE = 3.0
+ERROR_SINK_VALUE = 2.0
 TYPO_ERROR_FACTOR = 5.0
 
 def attach_glade(obj, filename, *names):
@@ -56,7 +56,7 @@ class Main(object):
         text = ''
         d = entry.get_layout_offsets()[0] * 2
 
-        for w in self.filler():
+        for w in self.filler:
             text += w
 
             entry.set_text(text)
@@ -115,15 +115,17 @@ class Main(object):
 
     def add_error(self, pos, typed, idx, wfactor):
         char = self.totype_text[pos]
+        if char == ' ':
+            return
 
         def weight_func(key):
             return 1.0/self.totype_text.count(char)
 
         if typed[idx][0] and pos > 0 and self.totype_text[pos-1] != ' ':
             key = self.totype_text[pos-1:pos+1]
-            self.errors[key] += weight_func(key)*wfactor
+        else:
+            key = self.totype_text[pos]
 
-        key = self.totype_text[pos]
         self.errors[key] += weight_func(key)*wfactor
 
     def sink_errors(self):
@@ -146,7 +148,7 @@ class Main(object):
             self.collect_rhitm_errors(self.typed_chars)
             self.collect_typo_errors(self.typed_chars)
 
-            #print sorted((r for r in self.errors.iteritems()), key=lambda r:r[1], reverse=True)[:5]
+            print sorted((r for r in self.errors.iteritems()), key=lambda r:r[1], reverse=True)[:5]
             #print self.totype_text
 
             self.accuracy_lb.set_text(
