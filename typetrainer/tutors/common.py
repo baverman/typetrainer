@@ -26,7 +26,10 @@ class Filler(object):
             else:
                 yield l
 
-    def change_distribution(self, seq, prob_factor):
+    def change_distribution(self, seq, prob_factor, replace=False):
+        if replace:
+            self.dist.clear()
+
         self.dist[seq] = prob_factor
         self.reset_parts()
 

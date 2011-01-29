@@ -7,10 +7,9 @@ import pango
 
 RHITM_ERROR_THRESHOLD = 1.7
 RHITM_ERROR_FACTOR = 3.0
-ERROR_SINK_VALUE = 2.0
+ERROR_SINK_VALUE = 3.0
 TYPO_ERROR_FACTOR = 5.0
-ERROR_RETYPE_THRESHOLD = 3.0
-AFTER_ERROR_RETYPE_SINK_VALUE = 3.0
+ERROR_RETYPE_THRESHOLD = 7.0
 
 def attach_glade(obj, filename, *names):
     builder = gtk.Builder()
@@ -143,9 +142,10 @@ class Main(object):
             self.collect_typo_errors(self.typed_chars)
             err = self.get_errors(self.typed_chars)
             if err:
+                #print err[:5]
                 key = err[0][0]
-                self.filler.change_distribution(key, 0.8)
-                self.errors[key] = max(0, self.errors[key] - AFTER_ERROR_RETYPE_SINK_VALUE)
+                self.filler.change_distribution(key, 0.8, True)
+                self.errors[key] = ERROR_RETYPE_THRESHOLD / 2.0
                 self.retype_lb.set_text(key)
             else:
                 self.filler.reset_distribution()
