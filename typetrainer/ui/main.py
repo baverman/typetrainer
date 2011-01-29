@@ -31,15 +31,9 @@ class Main(object):
         self.errors = defaultdict(float)
 
         attach_glade(self, os.path.join(os.path.dirname(__file__), 'main.glade'),
-            'window', 'totype_entry', 'type_entry', 'cpm_lb', 'accuracy_lb', 'vbox1')
+            'window', 'totype_entry', 'type_entry', 'retype_lb', 'stat_lb', 'vbox')
 
-        self.window.connect('key-release-event', self.on_key_event)
-        self.window.connect('key-press-event', self.on_key_event)
-
-        self.type_entry.connect('insert-text', self.on_entry_insert)
-        self.type_entry.connect('delete-text', self.on_entry_delete)
-
-        self.vbox1.pack_start(self.kbd_drawer)
+        self.vbox.pack_start(self.kbd_drawer)
         self.kbd_drawer.set_size_request(-1, 280)
         self.kbd_drawer.show()
 
@@ -140,8 +134,6 @@ class Main(object):
 
             cur_text = unicode(self.type_entry.get_text())
 
-            self.cpm_lb.set_text("%d" % int((len(cur_text) + 1) * 60.0 / delta))
-
             errors = len(self.totype_text) - len(cur_text)
             for i, c in enumerate(cur_text):
                 if c != self.totype_text[i]:
@@ -152,11 +144,16 @@ class Main(object):
             err = self.get_errors(self.typed_chars)
             if err:
                 key = err[0][0]
-                self.filler.change_distribution(key, 1.5)
+                self.filler.change_distribution(key, 0.8)
                 self.errors[key] = max(0, self.errors[key] - AFTER_ERROR_RETYPE_SINK_VALUE)
+                self.retype_lb.set_text(key)
+            else:
+                self.filler.reset_distribution()
+                self.retype_lb.set_text('')
 
-            self.accuracy_lb.set_text(
-                '%d%%' % int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text)))
+            self.stat_lb.set_text(
+                '%d / %d%%' % (int((len(cur_text) + 1) * 60.0 / delta),
+                    int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text))))
 
         self.fill()
 
@@ -171,7 +168,7 @@ class Main(object):
         self.kbd_drawer.event(event)
         return False
 
-    def on_entry_insert(self, entry, text, *args):
+    def on_type_entry_insert_text(self, entry, text, *args):
         tm = time.time()
         pos = entry.get_position()
         if pos < len(self.totype_text):
@@ -184,5 +181,5 @@ class Main(object):
         else:
             self.last_insert = 0
 
-    def on_entry_delete(self, *args):
+    def on_type_entry_delete_text(self, *args):
         self.last_insert = 0

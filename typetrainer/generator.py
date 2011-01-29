@@ -42,16 +42,32 @@ class Choicer(object):
         self.dist[part] = prob
         self.precalculate()
 
+    def adjust_many(self, parts, prob):
+        for p in parts:
+            self.dist[p] = 0.0
+
+        total = sum(self.dist.values())
+        if total != 0:
+            mul = (1.0 - prob) / total
+            for k in self.dist:
+                self.dist[k] *= mul
+
+        for p in parts:
+            self.dist[p] = prob / len(parts)
+
+        self.precalculate()
+
     def remove(self, part):
         self.adjust(part, 0)
         del self.dist[part]
 
 
 class Parts(object):
-    def __init__(self):
+    def __init__(self, dist):
         self.parts = defaultdict(int)
         self.total = 0.0
         self.choicer = None
+        self.dist = dist
 
     def add(self, part):
         self.choicer = None
@@ -59,7 +75,11 @@ class Parts(object):
         self.total += 1.0
 
     def make_choicer(self):
-        return Choicer(dict( (p, c / self.total) for p, c in self.parts.iteritems()))
+        ch = Choicer(dict( (p, c / self.total) for p, c in self.parts.iteritems()))
+        for k, prob in self.dist.iteritems():
+            ch.adjust_many([p for p in self.parts if k in p], prob)
+
+        return ch
 
     def choice(self, rnd):
         if not self.choicer:
@@ -67,9 +87,11 @@ class Parts(object):
 
         return self.choicer.choice(rnd)
 
+    def reset(self):
+        self.choicer = None
 
-def make_char_chain(words, seq_len):
-    first, other = {'any':Parts()}, {}
+def make_char_chain(words, seq_len, dist):
+    first, other = {'any':Parts(dist)}, {}
 
     for t, w in words:
         if t != 'w': continue
@@ -77,7 +99,7 @@ def make_char_chain(words, seq_len):
         wlen = len(w)
         if wlen <= seq_len:
             if not wlen in first:
-                first[wlen] = Parts()
+                first[wlen] = Parts(dist)
             first[wlen].add(w)
         else:
             pc = w[:seq_len]
@@ -89,7 +111,7 @@ def make_char_chain(words, seq_len):
                     break
 
                 if not pc in other:
-                    other[pc] = Parts()
+                    other[pc] = Parts(dist)
 
                 other[pc].add(next)
                 pc = next
