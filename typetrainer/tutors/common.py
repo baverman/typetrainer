@@ -18,10 +18,15 @@ class Filler(object):
 
         for t, l in itertools.cycle(itertools.chain(left, right)):
             if t == 'w':
-                word = generate_word(self.first, self.other, l, 3)
-                if word in self.old_generated:
+                for _ in range(50):
                     word = generate_word(self.first, self.other, l, 3)
+                    if word not in self.old_generated:
+                        break
+                else:
+                    continue
+
                 self.old_generated.append(word)
+
                 yield word
             else:
                 yield l

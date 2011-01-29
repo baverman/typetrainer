@@ -113,15 +113,12 @@ class Main(object):
         if char == ' ':
             return
 
-        def weight_func(key):
-            return 1.0/self.totype_text.count(char)
-
         if typed[idx][0] and pos > 0 and self.totype_text[pos-1] != ' ':
             key = self.totype_text[pos-1:pos+1]
         else:
             key = self.totype_text[pos]
 
-        self.errors[key] += weight_func(key)*wfactor
+        self.errors[key] += wfactor / self.totype_text.count(char)
 
     def sink_errors(self):
         for k in self.errors:
