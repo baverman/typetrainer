@@ -11,12 +11,15 @@ class Filler(object):
         self.lengths = list(make_lengths_seq(words))
         self.old_generated = collections.deque([], 100)
 
-    def __iter__(self):
         pos = random.randint(0, len(self.lengths) - 1)
         left = itertools.islice(self.lengths, pos, None)
         right = itertools.islice(self.lengths, 0, pos)
+        self.liter = itertools.cycle(itertools.chain(left, right))
 
-        for t, l in itertools.cycle(itertools.chain(left, right)):
+    def __iter__(self):
+        while True:
+            t, l = self.liter.next()
+
             if t == 'w':
                 for _ in range(50):
                     word = generate_word(self.first, self.other, l, 3)
