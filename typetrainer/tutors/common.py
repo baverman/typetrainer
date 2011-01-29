@@ -7,7 +7,7 @@ from typetrainer.generator import make_char_chain, generate_word
 class Filler(object):
     def __init__(self, words, make_lengths_seq):
         self.dist = {}
-        self.first, self.other = make_char_chain(words, 3, self.dist)
+        self.first, self.other, self.word_chars = make_char_chain(words, 3, self.dist)
         self.lengths = list(make_lengths_seq(words))
         self.old_generated = collections.deque([], 100)
 
@@ -48,3 +48,11 @@ class Filler(object):
 
         for p in self.first.values():
             p.reset()
+
+    def strip_non_word_chars(self, string):
+        result = ''
+        for c in string:
+            if c in self.word_chars:
+                result += c
+
+        return result

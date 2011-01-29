@@ -92,9 +92,12 @@ class Parts(object):
 
 def make_char_chain(words, seq_len, dist):
     first, other = {'any':Parts(dist)}, {}
+    word_chars = set()
 
     for t, w in words:
         if t != 'w': continue
+
+        map(word_chars.add, w)
 
         wlen = len(w)
         if wlen <= seq_len:
@@ -117,7 +120,7 @@ def make_char_chain(words, seq_len, dist):
                 pc = next
                 pos += seq_len
 
-    return first, other
+    return first, other, word_chars
 
 def chain_traversor(choices, other, length):
     copied = False

@@ -113,12 +113,14 @@ class Main(object):
         if char == ' ':
             return
 
-        if typed[idx][0] and pos > 0 and self.totype_text[pos-1] != ' ':
+        if typed[idx][0] and pos > 0:
             key = self.totype_text[pos-1:pos+1]
         else:
             key = self.totype_text[pos]
 
-        self.errors[key] += wfactor / self.totype_text.count(char)
+        key = self.filler.strip_non_word_chars(key)
+        if key:
+            self.errors[key] += wfactor / self.totype_text.count(char)
 
     def sink_errors(self):
         for k in self.errors:
