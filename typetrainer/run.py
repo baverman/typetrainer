@@ -4,7 +4,8 @@ def run():
 
     parser = OptionParser(usage="usage: %prog [options] file_with_words")
     parser.add_option("-t", "--tutor", dest="tutor", default='en.basic',
-        help="Tutor maker to use (en.basic, ru.basic)", metavar="tutor")
+        help="Tutor maker to use (en.basic, en.advanced, ru.basic). Default is 'en.basic'",
+        metavar="tutor")
 
     options, args = parser.parse_args()
 
