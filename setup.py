@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name     = 'typetrainer',
-    version  = '0.2.1',
+    version  = '0.3',
     author   = 'Anton Bobrov',
     author_email = 'bobrov@vl.ru',
     description = 'Typing tutor trainer',
-    long_description = open('README.rst').read(),
+    long_description = open('README.rst').read().replace('https', 'http'),
     zip_safe   = False,
     packages = find_packages(exclude=('tests', )),
     include_package_data = True,

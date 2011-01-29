@@ -35,9 +35,10 @@ Usage
 
    typetrainer -t tutor_package /path/to/file/with/words
 
-Where is ``tutor_package`` is one of tutors:
+Where ``tutor_package`` is one of tutors:
 
 * ``en.basic`` Basic English tutor with small-caps letters, commas and apostrophe.
+* ``en.advanced`` English tutor with symbols and all-caps letters.
 * ``ru.basic`` Basic Russian tutor with only small-caps letters.
 
 ``tutor_package`` may be omitted.
@@ -56,5 +57,4 @@ or::
 TODO
 ====
 
-* Advanced tutor for English (will be done when I reach 250 cpm on basic level).
 * Python tutor.
