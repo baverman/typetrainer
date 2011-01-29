@@ -24,3 +24,6 @@ class Filler(object):
                 yield word
             else:
                 yield l
+
+    def change_distribution(self, seq, prob_factor):
+        pass

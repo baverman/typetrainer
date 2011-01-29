@@ -9,6 +9,8 @@ RHITM_ERROR_THRESHOLD = 1.7
 RHITM_ERROR_FACTOR = 3.0
 ERROR_SINK_VALUE = 2.0
 TYPO_ERROR_FACTOR = 5.0
+ERROR_RETYPE_THRESHOLD = 3.0
+AFTER_ERROR_RETYPE_SINK_VALUE = 3.0
 
 def attach_glade(obj, filename, *names):
     builder = gtk.Builder()
@@ -87,11 +89,11 @@ class Main(object):
         attrs = pango.AttrList()
         for idx in bad_idx:
             # Pango layout needs byte index not char one O_o
-            idx = len(self.totype_text[:idx].encode('utf8'))
+            pidx = len(self.totype_text[:idx].encode('utf8'))
             if self.totype_text[idx] == ' ':
-                attrs.change(pango.AttrBackground(65535, 0, 0, idx, idx+1))
+                attrs.change(pango.AttrBackground(65535, 0, 0, pidx, pidx+1))
             else:
-                attrs.change(pango.AttrForeground(65535, 0, 0, idx, idx+1))
+                attrs.change(pango.AttrForeground(65535, 0, 0, pidx, pidx+1))
 
         self.totype_entry.get_layout().set_attributes(attrs)
         self.totype_entry.queue_draw()
@@ -147,14 +149,22 @@ class Main(object):
 
             self.collect_rhitm_errors(self.typed_chars)
             self.collect_typo_errors(self.typed_chars)
-
-            print sorted((r for r in self.errors.iteritems()), key=lambda r:r[1], reverse=True)[:5]
-            #print self.totype_text
+            err = self.get_errors(self.typed_chars)
+            if err:
+                key = err[0][0]
+                self.filler.change_distribution(key, 1.5)
+                self.errors[key] = max(0, self.errors[key] - AFTER_ERROR_RETYPE_SINK_VALUE)
 
             self.accuracy_lb.set_text(
                 '%d%%' % int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text)))
 
         self.fill()
+
+    def get_errors(self, typed):
+        self.collect_rhitm_errors(self.typed_chars)
+        self.collect_typo_errors(self.typed_chars)
+        return sorted((r for r in self.errors.iteritems() if r[1] > ERROR_RETYPE_THRESHOLD),
+            key=lambda r:r[1], reverse=True)
 
     def on_key_event(self, window, event):
         #print event.hardware_keycode, unichr(gtk.gdk.keyval_to_unicode(event.keyval))
