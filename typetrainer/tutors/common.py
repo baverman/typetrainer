@@ -17,15 +17,29 @@ class Filler(object):
         self.liter = itertools.cycle(itertools.chain(left, right))
 
     def __iter__(self):
+        skip_to_word = False
         while True:
             t, l = self.liter.next()
 
+            if skip_to_word:
+                while t != 'w':
+                    t, l = self.liter.next()
+
+                skip_to_word = False
+
             if t == 'w':
+                word = None
                 for _ in range(50):
-                    word = generate_word(self.first, self.other, l, 3)
+                    try:
+                        word = generate_word(self.first, self.other, l, 3)
+                    except KeyError:
+                        break
+
                     if word not in self.old_generated:
                         break
-                else:
+
+                if not word:
+                    skip_to_word = True
                     continue
 
                 self.old_generated.append(word)
