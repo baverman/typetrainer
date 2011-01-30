@@ -1,11 +1,16 @@
 def run():
     import sys
     from optparse import OptionParser
+    from typetrainer import VERSION
 
-    parser = OptionParser(usage="usage: %prog [options] file_with_words")
+    parser = OptionParser(usage="usage: %prog [options] file_with_words",
+        version="%prog " + VERSION)
     parser.add_option("-t", "--tutor", dest="tutor", default='en.basic',
-        help="Tutor maker to use (en.basic, en.advanced, ru.basic). Default is 'en.basic'",
+        help="Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'",
         metavar="tutor")
+    parser.add_option("-k", "--keyboard", dest="keyboard", default="n130", type='choice',
+        choices=['n130', 'n130_sdfv'], metavar="keyboard",
+        help="Onscreen keyboard type (n130, n130_sdfv). Default is %default")
 
     options, args = parser.parse_args()
 
@@ -32,9 +37,10 @@ def run():
 
     from typetrainer.ui import idle
     from typetrainer.ui.main import Main
-    from typetrainer.ui.kbd import n130_keyboard, KeyboardDrawer
+    from typetrainer.ui import kbd
 
-    app = Main(filler, KeyboardDrawer(n130_keyboard))
+    kbd_layout = getattr(kbd, options.keyboard + '_keyboard')
+    app = Main(filler, kbd.KeyboardDrawer(kbd_layout))
     app.window.show()
     idle(app.fill)
 

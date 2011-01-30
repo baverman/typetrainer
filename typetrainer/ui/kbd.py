@@ -51,15 +51,27 @@ n130_keyboard = {
  ]
 }
 
+n130_sdfv_keyboard = n130_keyboard.copy()
+n130_sdfv_keyboard['zones'] = [
+    ([3, 4, 7, 9, 10, 13], [3, 1, 4, 5, 1, 3, 0]),
+    ([1, 3, 4, 6, 8, 9], [0, 3, 1, 4, 5, 1, 3]),
+    ([1, 3, 4, 6, 8, 9, 12], [0, 3, 1, 4, 5, 1, 3, 0]),
+    ([1, 2, 3, 4, 7, 8, 9, 11 ], [0, 3, 1, 4, 2, 5, 1, 3, 0]),
+    ([4, 5], [0, 6, 0]),
+]
+n130_sdfv_keyboard['main_keys'] = [
+    (2,2), (2,3), (2,4), (3,4), (3,6), (2,7), (2,8), (2,9)
+]
+
 lc, hc = 0.68627, 0.88627
 button_colors = [
-    (hc, hc, hc), # grey
-    (hc, lc, lc), # red
-    (hc, hc, lc), # yellow
-    (lc, hc, lc), # green
-    (lc, hc, hc), # blue
-    (hc, lc, hc), # magenta
-    (lc, lc, hc), # deep blue
+    (hc, hc, hc), # 0 grey
+    (hc, lc, lc), # 1 red
+    (hc, hc, lc), # 2 yellow
+    (lc, hc, lc), # 3 green
+    (lc, hc, hc), # 4 blue
+    (hc, lc, hc), # 5 magenta
+    (lc, lc, hc), # 6 deep blue
 ]
 
 class KeyboardDrawer(gtk.DrawingArea):
@@ -81,8 +93,7 @@ class KeyboardDrawer(gtk.DrawingArea):
     def do_expose_event(self, event):
         cr = self.window.cairo_create()
 
-        cr.rectangle(event.area.x, event.area.y,
-                event.area.width, event.area.height)
+        cr.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
         cr.clip()
 
         wh = self.window.get_size()

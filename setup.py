@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+import typetrainer
 
 setup(
     name     = 'typetrainer',
-    version  = '0.3.1',
+    version  = typetrainer.VERSION,
     author   = 'Anton Bobrov',
     author_email = 'bobrov@vl.ru',
     description = 'Typing tutor trainer',
