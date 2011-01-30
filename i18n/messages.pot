@@ -1,0 +1,43 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: typetrainer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-30 19:56+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../typetrainer/run.py:7
+msgid "%prog [options] [file_with_words]"
+msgstr ""
+
+#: ../typetrainer/run.py:10
+#, python-format
+msgid ""
+"Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"
+msgstr ""
+
+#: ../typetrainer/run.py:14
+#, python-format
+msgid "Onscreen keyboard type (n130, n130_sdfv). Default is %default"
+msgstr ""
+
+#: ../typetrainer/run.py:23
+#, python-format
+msgid "Can't find [%s] tutor"
+msgstr ""
+
+#: ../typetrainer/run.py:30
+#, python-format
+msgid "Can't read [%s]"
+msgstr ""
