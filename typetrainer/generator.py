@@ -154,3 +154,19 @@ def generate_word(first, other, length, seq_length):
         return first[length].choice(random())
 
     return ''.join(chain_traversor(first['any'], other, length))
+
+def make_word_chain(words, dist):
+    result = {}
+
+    prev = words[0][1]
+    for t, w in words[1:]:
+        try:
+            p = result[prev]
+        except KeyError:
+            p = result[prev] = Parts(dist)
+
+        p.add(w)
+        if t == 'w':
+            prev = w
+
+    return result

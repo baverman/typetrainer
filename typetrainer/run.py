@@ -29,7 +29,11 @@ def run():
         except IOError:
             parser.error(_("Can't read [%s]") % filename)
 
-    filler = get_filler(options.tutor, args[0])
+    if args:
+        filler = get_filler(options.tutor, args[0])
+    else:
+        import tutors.help
+        filler = tutors.help.get_filler()
 
     import gtk
 

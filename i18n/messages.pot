@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 19:56+1000\n"
+"POT-Creation-Date: 2011-01-30 22:29+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,4 +40,10 @@ msgstr ""
 #: ../typetrainer/run.py:30
 #, python-format
 msgid "Can't read [%s]"
+msgstr ""
+
+#: ../typetrainer/tutors/help.py:8
+msgid ""
+"Press right mouse button. Click right mouse button to select other tutors. "
+"Choose a file with words. Click right mouse button at any window spot."
 msgstr ""
