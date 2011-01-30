@@ -51,7 +51,13 @@ class Main(object):
         text = ''
         d = entry.get_layout_offsets()[0] * 2
 
+        must_be_word = True
         for w in self.filler:
+            if must_be_word and not self.filler.strip_non_word_chars(w):
+                continue
+
+            must_be_word = False
+
             text += w
 
             entry.set_text(text)
