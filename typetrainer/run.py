@@ -24,7 +24,7 @@ def run():
         from typetrainer.tutors import get_filler
         try:
             filler = get_filler(config['TUTOR'], config['FILE'])
-            config.add_recent_file(config['FILE'])
+            config._add_recent_file(config['FILE'])
         except ImportError:
             parser.error(_("Can't find [%s] tutor") % config['TUTOR'])
         except IOError:

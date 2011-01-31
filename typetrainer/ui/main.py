@@ -254,11 +254,8 @@ class Main(BuilderAware):
 
         response = dialog.run()
         if response == gtk.RESPONSE_OK:
-            tutor = self.filler.name
-            if tutor not in available_tutors:
-                tutor = 'en.basic'
-
-            idle(self.update_filler, tutor, dialog.get_filename())
+            idle(self.update_filler, self.get_tutor_for_file(dialog.get_filename()),
+                dialog.get_filename())
 
         dialog.destroy()
 
@@ -268,18 +265,26 @@ class Main(BuilderAware):
 
         self.filler = get_filler(tutor, filename)
         self.fill()
-        self.config.add_recent_file(filename)
+        self.config._add_recent_file(filename)
         self.update_title()
 
         self.config['TUTOR'] = tutor
         self.config['FILE'] = filename
 
+    def get_tutor_for_file(self, filename):
+        tutor = self.filler.name
+        if tutor not in available_tutors:
+            tutor = 'en.basic'
+
+        return self.config._get_tutor_for_file(filename, tutor)
+
     def on_tutor_activate(self, item, tutor):
         if item.get_active():
+            self.config._set_tutor_for_file(self.filler.filename, tutor)
             idle(self.update_filler, tutor, self.filler.filename)
 
     def on_filename_activate(self, item, filename):
-        idle(self.update_filler, self.filler.name, filename)
+        idle(self.update_filler, self.get_tutor_for_file(filename), filename)
 
     def on_keyboard_activate(self, item, kbd):
         if item.get_active():

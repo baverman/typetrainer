@@ -16,7 +16,10 @@ class Config(PySettings):
     RECENT_FILES = None
     RECENT_FILES_DOC = 'Last opened file list'
 
-    def add_recent_file(self, filename, limit=5):
+    FILE2TUTOR = None
+    FILE2TUTOR_DOC = 'Map which stores last tutor used for file'
+
+    def _add_recent_file(self, filename, limit=5):
         if 'RECENT_FILES' not in self:
             rf = self['RECENT_FILES'] = []
         else:
@@ -29,3 +32,17 @@ class Config(PySettings):
 
         rf.insert(0, filename)
         rf[:] = rf[:limit]
+
+    def _set_tutor_for_file(self, filename, tutor):
+        if 'FILE2TUTOR' not in self:
+            f2t = self['FILE2TUTOR'] = {}
+        else:
+            f2t = self['FILE2TUTOR']
+
+        f2t[filename] = tutor
+
+    def _get_tutor_for_file(self, filename, default):
+        if 'FILE2TUTOR' in self:
+            return self['FILE2TUTOR'].get(filename, default)
+
+        return default
