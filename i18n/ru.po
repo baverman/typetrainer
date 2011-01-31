@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 22:29+1000\n"
+"POT-Creation-Date: 2011-01-31 12:33+1000\n"
 "PO-Revision-Date: 2011-01-30 19:31+1000\n"
 "Last-Translator:  <bobrov@vl.ru>\n"
 "Language-Team: Russian\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: ../typetrainer/run.py:7
+#: ../typetrainer/run.py:6
 msgid "%prog [options] [file_with_words]"
 msgstr "%prog [options] [/путь/к/файлу/со/словами]"
 
-#: ../typetrainer/run.py:10
+#: ../typetrainer/run.py:9
 #, python-format
 msgid ""
 "Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"
@@ -31,17 +31,17 @@ msgstr ""
 "Генератор упражнений (en.basic, en.advanced, ru.basic). По умолчанию "
 "'%default'"
 
-#: ../typetrainer/run.py:14
+#: ../typetrainer/run.py:13
 #, python-format
 msgid "Onscreen keyboard type (n130, n130_sdfv). Default is %default"
 msgstr "Вид экранной клавиатуры (n130, n130_sdfv). По умолчанию %default"
 
-#: ../typetrainer/run.py:23
+#: ../typetrainer/run.py:22
 #, python-format
 msgid "Can't find [%s] tutor"
 msgstr "Не найден генератор упражнений [%s]"
 
-#: ../typetrainer/run.py:30
+#: ../typetrainer/run.py:24
 #, python-format
 msgid "Can't read [%s]"
 msgstr "Нельзя прочитать [%s]"
@@ -50,6 +50,31 @@ msgstr "Нельзя прочитать [%s]"
 msgid ""
 "Press right mouse button. Click right mouse button to select other tutors. "
 "Choose a file with words. Click right mouse button at any window spot."
-msgstr "Нажмите правую кнопку мыши. Чтобы разнообразить упражнение, нажмите правую кнопку мыши. "
-"Выберите файл с текстом. Щелкините в любом месте окна правой кнопкой."
+msgstr ""
+"Нажмите правую кнопку мыши. Чтобы разнообразить упражнение, нажмите правую "
+"кнопку мыши. Выберите файл с текстом. Щелкините в любом месте окна правой "
+"кнопкой."
 
+#: ../typetrainer/tutors/__init__.py:6
+msgid "Basic English"
+msgstr "Простой английский"
+
+#: ../typetrainer/tutors/__init__.py:7
+msgid "Advanced English"
+msgstr "Сложный английский"
+
+#: ../typetrainer/tutors/__init__.py:8
+msgid "Basic Russian"
+msgstr "Простой русский"
+
+#: ../typetrainer/tutors/__init__.py:19
+msgid "Choose file with words."
+msgstr "Выбирите файл со словами."
+
+#: ../typetrainer/ui/main.py:223
+msgid "Open file..."
+msgstr "Открытие файла..."
+
+#: ../typetrainer/ui/main.py:242
+msgid "Opening..."
+msgstr "Открываю..."

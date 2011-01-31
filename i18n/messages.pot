@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-30 22:29+1000\n"
+"POT-Creation-Date: 2011-01-31 12:36+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../typetrainer/run.py:7
+#: ../typetrainer/run.py:6
 msgid "%prog [options] [file_with_words]"
 msgstr ""
 
-#: ../typetrainer/run.py:10
+#: ../typetrainer/run.py:9
 #, python-format
 msgid ""
 "Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"
 msgstr ""
 
-#: ../typetrainer/run.py:14
+#: ../typetrainer/run.py:13
 #, python-format
 msgid "Onscreen keyboard type (n130, n130_sdfv). Default is %default"
 msgstr ""
 
-#: ../typetrainer/run.py:23
+#: ../typetrainer/run.py:22
 #, python-format
 msgid "Can't find [%s] tutor"
 msgstr ""
 
-#: ../typetrainer/run.py:30
+#: ../typetrainer/run.py:24
 #, python-format
 msgid "Can't read [%s]"
 msgstr ""
@@ -46,4 +46,28 @@ msgstr ""
 msgid ""
 "Press right mouse button. Click right mouse button to select other tutors. "
 "Choose a file with words. Click right mouse button at any window spot."
+msgstr ""
+
+#: ../typetrainer/tutors/__init__.py:6
+msgid "Basic English"
+msgstr ""
+
+#: ../typetrainer/tutors/__init__.py:7
+msgid "Advanced English"
+msgstr ""
+
+#: ../typetrainer/tutors/__init__.py:8
+msgid "Basic Russian"
+msgstr ""
+
+#: ../typetrainer/tutors/__init__.py:19
+msgid "Choose file with words."
+msgstr ""
+
+#: ../typetrainer/ui/main.py:223
+msgid "Open file..."
+msgstr ""
+
+#: ../typetrainer/ui/main.py:242
+msgid "Opening..."
 msgstr ""

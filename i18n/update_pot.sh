@@ -1,3 +1,3 @@
 #!/bin/sh
 
-xgettext -L Python -k_ -kN_ -o messages.pot --package-name=typetrainer `find ../typetrainer -name '*.py'`
+xgettext -j -L Python -k_ -kN_ -o messages.pot --package-name=typetrainer `find ../typetrainer -name '*.py'`
