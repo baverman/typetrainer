@@ -63,6 +63,15 @@ n130_sdfv_keyboard['main_keys'] = [
     (2,2), (2,3), (2,4), (3,4), (3,6), (2,7), (2,8), (2,9)
 ]
 
+n130_dvp_keyboard = n130_keyboard.copy()
+n130_dvp_keyboard['zones'] = [
+    ([3, 4, 5, 7, 9, 10, 11, 13], [1, 2, 3, 4, 5, 1, 2, 3, 0]),
+    ([1, 2, 3, 4, 6, 8, 9, 10], [0, 1, 2, 3, 4, 5, 1, 2, 3]),
+    ([1, 2, 3, 4, 6, 8, 9, 10, 12 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
+    ([1, 2, 3, 4, 6, 8, 9, 10, 11 ], [0, 1, 2, 3, 4, 5, 1, 2, 3, 0]),
+    ([4, 5], [0, 6, 0]),
+]
+
 lc, hc = 0.68627, 0.88627
 button_colors = [
     (hc, hc, hc), # 0 grey
@@ -89,6 +98,11 @@ class KeyboardDrawer(gtk.DrawingArea):
 
         self.last_wh = -100, -100
         self.predraw_cache = {}
+
+    def set_keyboard(self, kbd):
+        self.kbd = kbd
+        self.predraw_cache.clear()
+        self.queue_draw()
 
     def do_expose_event(self, event):
         cr = self.window.cairo_create()

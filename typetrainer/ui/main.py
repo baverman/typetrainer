@@ -8,6 +8,13 @@ import pango
 from typetrainer.i18n import _
 from typetrainer.ui import idle, refresh_gui
 from typetrainer.tutors import available_tutors, get_filler
+from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard
+
+available_keyboards = (
+    (n130_keyboard, _('ASDF zones')),
+    (n130_sdfv_keyboard, _('SDFV zones')),
+    (n130_dvp_keyboard, _('Programmer Dvorak zones')),
+)
 
 RHITM_ERROR_THRESHOLD = 1.7
 RHITM_ERROR_FACTOR = 3.0
@@ -211,6 +218,19 @@ class Main(object):
 
             menu.append(gtk.SeparatorMenuItem())
 
+
+        item = None
+        for kbd, label in available_keyboards:
+            item = gtk.RadioMenuItem(item, label)
+            if kbd is self.kbd_drawer.kbd:
+                item.set_active(True)
+
+            item.connect('activate', self.on_keyboard_activate, kbd)
+            menu.append(item)
+
+        menu.append(gtk.SeparatorMenuItem())
+
+
         item = gtk.ImageMenuItem(gtk.STOCK_OPEN)
         item.connect('activate', self.on_open_file_activate)
         menu.append(item)
@@ -247,3 +267,7 @@ class Main(object):
     def on_tutor_activate(self, item, tutor):
         if item.get_active():
             idle(self.update_filler, tutor, self.filler.filename)
+
+    def on_keyboard_activate(self, item, kbd):
+        if item.get_active():
+            idle(self.kbd_drawer.set_keyboard, kbd)

@@ -9,8 +9,8 @@ def run():
         help=_("Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"),
         metavar="tutor")
     parser.add_option("-k", "--keyboard", dest="keyboard", default="n130", type='choice',
-        choices=['n130', 'n130_sdfv'], metavar="keyboard",
-        help=_("Onscreen keyboard type (n130, n130_sdfv). Default is %default"))
+        choices=['n130', 'n130_sdfv', 'n130_dvp'], metavar="keyboard",
+        help=_("Onscreen keyboard type (n130, n130_sdfv, n130_dvp). Default is %default"))
 
     options, args = parser.parse_args()
 
