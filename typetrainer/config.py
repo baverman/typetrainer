@@ -12,3 +12,20 @@ class Config(PySettings):
 
     FILE = None
     FILE_DOC = 'Last opened file with words'
+
+    RECENT_FILES = None
+    RECENT_FILES_DOC = 'Last opened file list'
+
+    def add_recent_file(self, filename, limit=5):
+        if 'RECENT_FILES' not in self:
+            rf = self['RECENT_FILES'] = []
+        else:
+            rf = self['RECENT_FILES']
+
+        try:
+            rf.remove(filename)
+        except ValueError:
+            pass
+
+        rf.insert(0, filename)
+        rf[:] = rf[:limit]

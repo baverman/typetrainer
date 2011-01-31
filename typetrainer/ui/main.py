@@ -1,4 +1,3 @@
-import os.path
 import time
 from collections import defaultdict
 
@@ -226,6 +225,16 @@ class Main(BuilderAware):
         menu.append(gtk.SeparatorMenuItem())
 
 
+        if 'RECENT_FILES' in self.config and self.config['RECENT_FILES']:
+            item = None
+            for fname in self.config['RECENT_FILES']:
+                item = gtk.MenuItem(fname)
+                item.connect('activate', self.on_filename_activate, fname)
+                menu.append(item)
+
+            menu.append(gtk.SeparatorMenuItem())
+
+
         item = gtk.ImageMenuItem(gtk.STOCK_OPEN)
         item.connect('activate', self.on_open_file_activate)
         menu.append(item)
@@ -259,6 +268,7 @@ class Main(BuilderAware):
 
         self.filler = get_filler(tutor, filename)
         self.fill()
+        self.config.add_recent_file(filename)
         self.update_title()
 
         self.config['TUTOR'] = tutor
@@ -267,6 +277,9 @@ class Main(BuilderAware):
     def on_tutor_activate(self, item, tutor):
         if item.get_active():
             idle(self.update_filler, tutor, self.filler.filename)
+
+    def on_filename_activate(self, item, filename):
+        idle(self.update_filler, self.filler.name, filename)
 
     def on_keyboard_activate(self, item, kbd):
         if item.get_active():
