@@ -6,14 +6,15 @@ import gtk
 import pango
 
 from typetrainer.i18n import _
-from typetrainer.ui import idle, refresh_gui
+from typetrainer.ui import idle, refresh_gui, BuilderAware
+from typetrainer.util import join_to_file_dir
 from typetrainer.tutors import available_tutors, get_filler
 from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard
 
 available_keyboards = (
-    (n130_keyboard, _('ASDF zones')),
-    (n130_sdfv_keyboard, _('SDFV zones')),
-    (n130_dvp_keyboard, _('Programmer Dvorak zones')),
+    (n130_keyboard, _('ASDF zones'), 'n130'),
+    (n130_sdfv_keyboard, _('SDFV zones'), 'n130_sdfv'),
+    (n130_dvp_keyboard, _('Programmer Dvorak zones'), 'n130_dvp'),
 )
 
 RHITM_ERROR_THRESHOLD = 1.7
@@ -22,30 +23,23 @@ ERROR_SINK_VALUE = 3.0
 TYPO_ERROR_FACTOR = 5.0
 ERROR_RETYPE_THRESHOLD = 7.0
 
-def attach_glade(obj, filename, *names):
-    builder = gtk.Builder()
-    builder.add_from_file(filename)
-
-    for name in names:
-        setattr(obj, name, builder.get_object(name))
-
-    builder.connect_signals(obj)
-
-class Main(object):
+class Main(BuilderAware):
     """glade-file: main.glade"""
 
-    def __init__(self, filler, kbd_drawer):
+    def __init__(self, config, filler, kbd_drawer):
+        BuilderAware.__init__(self, join_to_file_dir(__file__, 'main.glade'))
+
+        self.config = config
         self.filler = filler
         self.kbd_drawer = kbd_drawer
         self.typed_chars = []
         self.errors = defaultdict(float)
 
-        attach_glade(self, os.path.join(os.path.dirname(__file__), 'main.glade'),
-            'window', 'totype_entry', 'type_entry', 'retype_lb', 'stat_lb', 'vbox')
-
         self.vbox.pack_start(self.kbd_drawer)
         self.kbd_drawer.set_size_request(-1, 280)
         self.kbd_drawer.show()
+
+        self.update_title()
 
     def fill(self):
         self.type_entry.set_text('')
@@ -56,8 +50,8 @@ class Main(object):
 
         entry = self.totype_entry
 
-        entry.modify_font(pango.FontDescription('sans 16'))
-        self.type_entry.modify_font(pango.FontDescription('sans 16'))
+        entry.modify_font(pango.FontDescription(self.config['FONT']))
+        self.type_entry.modify_font(pango.FontDescription(self.config['FONT']))
 
         text = ''
         d = entry.get_layout_offsets()[0] * 2
@@ -83,6 +77,7 @@ class Main(object):
         self.totype_text = unicode(entry.get_text())
 
     def on_window_delete_event(self, *args):
+        self.config.save()
         gtk.main_quit()
 
     def on_type_entry_changed(self, *args):
@@ -220,7 +215,7 @@ class Main(object):
 
 
         item = None
-        for kbd, label in available_keyboards:
+        for kbd, label, name in available_keyboards:
             item = gtk.RadioMenuItem(item, label)
             if kbd is self.kbd_drawer.kbd:
                 item.set_active(True)
@@ -261,8 +256,13 @@ class Main(object):
     def update_filler(self, tutor, filename):
         self.totype_entry.set_text(_('Opening...'))
         refresh_gui()
+
         self.filler = get_filler(tutor, filename)
         self.fill()
+        self.update_title()
+
+        self.config['TUTOR'] = tutor
+        self.config['FILE'] = filename
 
     def on_tutor_activate(self, item, tutor):
         if item.get_active():
@@ -270,4 +270,17 @@ class Main(object):
 
     def on_keyboard_activate(self, item, kbd):
         if item.get_active():
+            for k, label, name in available_keyboards:
+                if k is kbd:
+                    self.config['KEYBOARD'] = name
+                    break
+            else:
+                self.config['KEYBOARD'] = None
+
             idle(self.kbd_drawer.set_keyboard, kbd)
+
+    def update_title(self):
+        if self.filler.filename:
+            self.window.set_title('Typetrainer: ' + self.filler.filename)
+        else:
+            self.window.set_title('Typetrainer')

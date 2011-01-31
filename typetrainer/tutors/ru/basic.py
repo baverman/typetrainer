@@ -28,6 +28,6 @@ def split_to_words(text):
 def get_filler(text, options):
     words = list(split_to_words(text))
     if not words:
-        words = list(split_to_words(u'Пустое упражнение. Выбирите другое или загрузите '
+        words = list(split_to_words(u'Пустое упражнение. Выберите другое или загрузите '
             u'соответствующий файл'))
     return Filler(words, make_lengths_seq)
