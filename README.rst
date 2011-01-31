@@ -25,36 +25,36 @@ Or you can install from sources::
    python setup.py build
    sudo python setup.py install
 
+Or run directly from sources without any install::
+
+   ./run.py
+
 Also you need pygtk to be installed.
 
 
 Usage
 =====
 
-::
+Simply run::
 
-   typetrainer -t tutor_package /path/to/file/with/words
+   typetrainer
 
-Where ``tutor_package`` is one of tutors:
+After start you can click right mouse button at keyboard to activate popup menu.
+It contains:
 
-* ``en.basic`` Basic English tutor with small-caps letters, commas and apostrophe.
-* ``en.advanced`` English tutor with symbols and all-caps letters.
-* ``ru.basic`` Basic Russian tutor with only small-caps letters.
+* Tutor generator selector.
+* Keyboard selector.
+* Recent files list.
+* Open file dialog item.
 
-``tutor_package`` may be omitted.
+Tutor generator needs utf-8 encoded file to make exercises for you. You should
+provide it via command line or activating ``Open`` dialog.
 
-And words file is any text in utf8 encoding.
-
-Personally I prefer to run type trainer with fortunes::
-
-   typetrainer /usr/share/fortune/debian
-
-or::
-
-   typetrainer /usr/share/fortune/cookie
-
+Personally I prefer to run type trainer with fortunes.
 
 TODO
 ====
 
 * Python tutor.
+* Statistic plots.
+* Advanced Russian tutor.

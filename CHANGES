@@ -1,0 +1,12 @@
+CHANGES
+=======
+
+0.4
+---
+
+* Popup menu to select current tutor generator, keyboard type and open files.
+* SDFV keyboard.
+* DVP keyboard.
+* Recent files.
+* Remember last opened file and tutor.
+* Russian localization.
