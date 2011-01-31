@@ -1,4 +1,4 @@
-import gobject
+import gtk, gobject
 
 def idle_callback(callable, args):
     args, kwargs = args
@@ -11,3 +11,7 @@ def idle(callable, *args, **kwargs):
         options['priority'] = kwargs['priority']
         del kwargs['priority']
     return gobject.idle_add(idle_callback, callable, (args, kwargs), **options)
+
+def refresh_gui():
+    while gtk.events_pending():
+        gtk.main_iteration_do(block=False)

@@ -1,5 +1,4 @@
 def run():
-    import sys
     from optparse import OptionParser
     from typetrainer import VERSION
     from typetrainer.i18n import _
@@ -15,22 +14,14 @@ def run():
 
     options, args = parser.parse_args()
 
-    def get_filler(tutor, filename):
-        package_name = 'typetrainer.tutors.' + tutor
-        try:
-            __import__(package_name)
-        except ImportError:
-            parser.error(_("Can't find [%s] tutor") % tutor)
-
-        pkg = sys.modules[package_name]
-
-        try:
-            return pkg.get_filler(open(filename).read().decode('utf-8'), None)
-        except IOError:
-            parser.error(_("Can't read [%s]") % filename)
-
     if args:
-        filler = get_filler(options.tutor, args[0])
+        from typetrainer.tutors import get_filler
+        try:
+            filler = get_filler(options.tutor, args[0])
+        except ImportError:
+            parser.error(_("Can't find [%s] tutor") % options.tutor)
+        except IOError:
+            parser.error(_("Can't read [%s]") % args[0])
     else:
         import tutors.help
         filler = tutors.help.get_filler()

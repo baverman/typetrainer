@@ -5,6 +5,10 @@ from collections import defaultdict
 import gtk
 import pango
 
+from typetrainer.i18n import _
+from typetrainer.ui import idle, refresh_gui
+from typetrainer.tutors import available_tutors, get_filler
+
 RHITM_ERROR_THRESHOLD = 1.7
 RHITM_ERROR_FACTOR = 3.0
 ERROR_SINK_VALUE = 3.0
@@ -188,3 +192,58 @@ class Main(object):
 
     def on_type_entry_delete_text(self, *args):
         self.last_insert = 0
+
+    def on_window_button_press_event(self, window, event):
+        if event.button != 3:
+            return False
+
+        menu = gtk.Menu()
+
+        if self.filler.name in available_tutors:
+            item = None
+            for id, label in available_tutors.items():
+                item = gtk.RadioMenuItem(item, label)
+                if id == self.filler.name:
+                    item.set_active(True)
+
+                item.connect('activate', self.on_tutor_activate, id)
+                menu.append(item)
+
+            menu.append(gtk.SeparatorMenuItem())
+
+        item = gtk.ImageMenuItem(gtk.STOCK_OPEN)
+        item.connect('activate', self.on_open_file_activate)
+        menu.append(item)
+
+        menu.show_all()
+        menu.popup(None, None, None, event.button, event.time)
+        return True
+
+    def on_open_file_activate(self, item):
+        dialog = gtk.FileChooserDialog(_("Open file..."),
+            None,
+            gtk.FILE_CHOOSER_ACTION_OPEN,
+            (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+            gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+
+        dialog.set_default_response(gtk.RESPONSE_OK)
+
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            tutor = self.filler.name
+            if tutor not in available_tutors:
+                tutor = 'en.basic'
+
+            idle(self.update_filler, tutor, dialog.get_filename())
+
+        dialog.destroy()
+
+    def update_filler(self, tutor, filename):
+        self.totype_entry.set_text(_('Opening...'))
+        refresh_gui()
+        self.filler = get_filler(tutor, filename)
+        self.fill()
+
+    def on_tutor_activate(self, item, tutor):
+        if item.get_active():
+            idle(self.update_filler, tutor, self.filler.filename)

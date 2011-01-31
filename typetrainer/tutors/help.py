@@ -28,6 +28,8 @@ class Filler(object):
     def __init__(self, words):
         self.dist = {}
         self.chain = make_word_chain(words, self.dist)
+        self.name = 'help'
+        self.filename = None
 
     def get_next_word(self, prev=None):
         try:
