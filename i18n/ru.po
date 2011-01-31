@@ -62,7 +62,7 @@ msgstr "Простой русский"
 
 #: ../typetrainer/tutors/__init__.py:19
 msgid "Choose file with words."
-msgstr "Выбирите файл со словами."
+msgstr "Выберите файл со словами."
 
 #: ../typetrainer/ui/main.py:14
 msgid "ASDF zones"
