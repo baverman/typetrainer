@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-31 12:33+1000\n"
+"POT-Creation-Date: 2011-01-31 14:37+1000\n"
 "PO-Revision-Date: 2011-01-30 19:31+1000\n"
 "Last-Translator:  <bobrov@vl.ru>\n"
 "Language-Team: Russian\n"
@@ -19,29 +19,22 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: ../typetrainer/run.py:6
+#: ../typetrainer/run.py:7
 msgid "%prog [options] [file_with_words]"
 msgstr "%prog [options] [/путь/к/файлу/со/словами]"
 
-#: ../typetrainer/run.py:9
-#, python-format
+#: ../typetrainer/run.py:10
 msgid ""
-"Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"
+"Tutor maker to use (en.basic, en.advanced, ru.basic). Default is en.basic"
 msgstr ""
-"Генератор упражнений (en.basic, en.advanced, ru.basic). По умолчанию "
-"'%default'"
+"Генератор упражнений (en.basic, en.advanced, ru.basic). По умолчанию en.basic"
 
-#: ../typetrainer/run.py:13
-#, python-format
-msgid "Onscreen keyboard type (n130, n130_sdfv). Default is %default"
-msgstr "Вид экранной клавиатуры (n130, n130_sdfv). По умолчанию %default"
-
-#: ../typetrainer/run.py:22
+#: ../typetrainer/run.py:29
 #, python-format
 msgid "Can't find [%s] tutor"
 msgstr "Не найден генератор упражнений [%s]"
 
-#: ../typetrainer/run.py:24
+#: ../typetrainer/run.py:31
 #, python-format
 msgid "Can't read [%s]"
 msgstr "Нельзя прочитать [%s]"
@@ -71,10 +64,22 @@ msgstr "Простой русский"
 msgid "Choose file with words."
 msgstr "Выбирите файл со словами."
 
-#: ../typetrainer/ui/main.py:223
+#: ../typetrainer/ui/main.py:14
+msgid "ASDF zones"
+msgstr "Зоны ФЫВА"
+
+#: ../typetrainer/ui/main.py:15
+msgid "SDFV zones"
+msgstr "Зоны ЫВАМ"
+
+#: ../typetrainer/ui/main.py:16
+msgid "Programmer Dvorak zones"
+msgstr "Зоны программерского Дворака"
+
+#: ../typetrainer/ui/main.py:247
 msgid "Open file..."
 msgstr "Открытие файла..."
 
-#: ../typetrainer/ui/main.py:242
+#: ../typetrainer/ui/main.py:266
 msgid "Opening..."
 msgstr "Открываю..."

@@ -7,11 +7,8 @@ def run():
     parser = OptionParser(usage=_("%prog [options] [file_with_words]"),
         version="%prog " + VERSION)
     parser.add_option("-t", "--tutor", dest="tutor",
-        help=_("Tutor maker to use (en.basic, en.advanced, ru.basic). Default is '%default'"),
+        help=_("Tutor maker to use (en.basic, en.advanced, ru.basic). Default is en.basic"),
         metavar="tutor")
-    parser.add_option("-k", "--keyboard", dest="keyboard", type='choice',
-        choices=['n130', 'n130_sdfv', 'n130_dvp'], metavar="keyboard",
-        help=_("Onscreen keyboard type (n130, n130_sdfv, n130_dvp). Default is %default"))
 
     options, args = parser.parse_args()
     config = Config()
@@ -19,9 +16,6 @@ def run():
 
     if options.tutor:
         config['TUTOR'] = options.tutor
-
-    if options.keyboard:
-        config['KEYBOARD'] = options.keyboard
 
     if args:
         config['FILE'] = args[0]
