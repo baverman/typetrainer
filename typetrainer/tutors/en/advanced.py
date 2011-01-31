@@ -33,4 +33,6 @@ def split_to_words(text):
 
 def get_filler(text, options):
     words = list(split_to_words(text))
+    if not words:
+        words = list(split_to_words(u'Tutor is empty. Select another or choose appropriate file.'))
     return Filler(words, make_lengths_seq)
