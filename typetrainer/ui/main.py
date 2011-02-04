@@ -1,5 +1,5 @@
 import time
-from collections import defaultdict
+from collections import defaultdict, deque
 
 import gtk
 import pango
@@ -21,6 +21,7 @@ RHITM_ERROR_FACTOR = 3.0
 ERROR_SINK_VALUE = 3.0
 TYPO_ERROR_FACTOR = 5.0
 ERROR_RETYPE_THRESHOLD = 7.0
+CHARS_HISTORY_LENGTH = 500
 
 class Main(BuilderAware):
     """glade-file: main.glade"""
@@ -31,7 +32,7 @@ class Main(BuilderAware):
         self.config = config
         self.filler = filler
         self.kbd_drawer = kbd_drawer
-        self.typed_chars = []
+        self.typed_chars = deque([], CHARS_HISTORY_LENGTH)
         self.errors = defaultdict(float)
 
         self.vbox.pack_start(self.kbd_drawer)
@@ -43,9 +44,7 @@ class Main(BuilderAware):
     def fill(self):
         self.type_entry.set_text('')
         self.start_time = 0
-        self.typed_chars[:] = []
         self.last_insert = 0
-        self.sink_errors()
 
         entry = self.totype_entry
 
@@ -93,49 +92,12 @@ class Main(BuilderAware):
         attrs = pango.AttrList()
         for idx in bad_idx:
             # Pango layout needs byte index not char one O_o
-            pidx = len(self.totype_text[:idx].encode('utf8'))
-            if self.totype_text[idx] == ' ':
-                attrs.change(pango.AttrBackground(65535, 0, 0, pidx, pidx+1))
-            else:
-                attrs.change(pango.AttrForeground(65535, 0, 0, pidx, pidx+1))
+            pidx = len(self.totype_text[:idx].encode('utf-8'))
+            Attr = pango.AttrBackground if self.totype_text[idx] == ' ' else pango.AttrForeground
+            attrs.change(Attr(65535, 0, 0, pidx, pidx+1))
 
         self.totype_entry.get_layout().set_attributes(attrs)
         self.totype_entry.queue_draw()
-
-    def collect_rhitm_errors(self, typed):
-        gaps = [r + (i,) for i, r in enumerate(typed) if r[0] and self.totype_text[r[1]] == r[2]]
-        if gaps:
-            avg = sum(g[0] for g in gaps) / len(gaps)
-            for g, pos, char, idx in gaps:
-                if g / avg > RHITM_ERROR_THRESHOLD:
-                    self.add_error(pos, typed, idx, g / avg * RHITM_ERROR_FACTOR)
-
-    def collect_typo_errors(self, typed):
-        prev_is_error = False
-        for idx, (_, pos, char) in enumerate(typed):
-            if char != self.totype_text[pos] and not prev_is_error:
-                prev_is_error = True
-                self.add_error(pos, typed, idx, TYPO_ERROR_FACTOR)
-            else:
-                prev_is_error = False
-
-    def add_error(self, pos, typed, idx, wfactor):
-        char = self.totype_text[pos]
-        if char == ' ':
-            return
-
-        if typed[idx][0] and pos > 0:
-            key = self.totype_text[pos-1:pos+1]
-        else:
-            key = self.totype_text[pos]
-
-        key = self.filler.strip_non_word_chars(key)
-        if key:
-            self.errors[key] += wfactor / self.totype_text.count(char)
-
-    def sink_errors(self):
-        for k in self.errors:
-            self.errors[k] = max(0, self.errors[k] - ERROR_SINK_VALUE)
 
     def on_type_entry_activate(self, *args):
         if self.start_time:
@@ -148,15 +110,11 @@ class Main(BuilderAware):
                 if c != self.totype_text[i]:
                     errors += 1
 
-            self.collect_rhitm_errors(self.typed_chars)
-            self.collect_typo_errors(self.typed_chars)
-            err = self.get_errors(self.typed_chars)
+            err = self.get_error(self.typed_chars)
+            err = 'tb'
             if err:
-                #print err[:5]
-                key = err[0][0]
-                self.filler.change_distribution(key, 0.8, True)
-                self.errors[key] = ERROR_RETYPE_THRESHOLD / 2.0
-                self.retype_lb.set_text(key)
+                self.filler.change_distribution(err, 0.8, True)
+                self.retype_lb.set_text(err)
             else:
                 self.filler.reset_distribution()
                 self.retype_lb.set_text('')
@@ -167,11 +125,50 @@ class Main(BuilderAware):
 
         self.fill()
 
-    def get_errors(self, typed):
-        self.collect_rhitm_errors(self.typed_chars)
-        self.collect_typo_errors(self.typed_chars)
-        return sorted((r for r in self.errors.iteritems() if r[1] > ERROR_RETYPE_THRESHOLD),
-            key=lambda r:r[1], reverse=True)
+    def get_error(self, typed):
+        errors = {}
+
+        gaps = [r[3] for r in typed if r[0] and r[3]]
+        if gaps:
+            avg = sum(gaps)/len(gaps)
+        else:
+            avg = 100000.0
+
+        for is_correct, correct_char, prev_char, gap in typed:
+            try:
+                err = errors[correct_char]
+            except KeyError:
+                err = errors[correct_char] = {'bad':0.0, 'all':0.0, 'prevs':defaultdict(int)}
+
+            if not is_correct or gap / avg > RHITM_ERROR_THRESHOLD:
+                err['bad'] += 1.0
+                if prev_char:
+                    err['prevs'][prev_char] += 1
+
+            err['all'] += 1.0
+
+        max_value = 0
+        err_char = prevs = None
+        for ch, r in errors.iteritems():
+            if r['all'] > 2:
+                #print ch, r['bad'] / r['all'], r['prevs']
+                value = r['bad'] / r['all']
+                if value > max_value:
+                    max_value = value
+                    err_char, prevs = ch, r['prevs']
+
+        if max_value > 0.3:
+            pchar = ''
+            mx = max(prevs.values()) if prevs else 0
+            if mx > 1:
+                pchars = [p for p, c in prevs.iteritems() if c == mx]
+                if len(pchars) == 1:
+                    pchar = pchars[0]
+
+            #print '!!!', pchar, err_char, '\n\n'
+            return pchar + err_char
+        else:
+            return None
 
     def on_key_event(self, window, event):
         #print event.hardware_keycode, unichr(gtk.gdk.keyval_to_unicode(event.keyval))
@@ -182,10 +179,17 @@ class Main(BuilderAware):
         tm = time.time()
         pos = entry.get_position()
         if pos < len(self.totype_text):
-            if self.last_insert:
-                self.typed_chars.append((tm - self.last_insert, pos, text))
-            else:
-                self.typed_chars.append((None, pos, unicode(text)))
+            correct_char = self.filler.strip_non_word_chars(self.totype_text[pos])
+            if correct_char:
+                typed_char = unicode(text)
+                prev_char = self.filler.strip_non_word_chars(self.totype_text[pos-1]) if pos > 0 else None
+                if typed_char != correct_char:
+                    self.typed_chars.append((False, correct_char, prev_char, 0.0))
+                else:
+                    if self.last_insert:
+                        self.typed_chars.append((True, correct_char, prev_char, tm - self.last_insert))
+                    else:
+                        self.typed_chars.append((True, correct_char, prev_char, 0.0))
 
             self.last_insert = tm
         else:

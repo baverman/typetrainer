@@ -15,7 +15,7 @@ def split_to_words(text):
         if word.endswith(','):
             syms.append(',')
 
-        word = word.strip(',')
+        word = word.replace(',', '').strip("'")
         if word:
             yield 'w', word
             if syms:

@@ -43,6 +43,9 @@ class Choicer(object):
         self.precalculate()
 
     def adjust_many(self, parts, prob):
+        if not parts:
+            return
+
         for p in parts:
             self.dist[p] = 0.0
 
