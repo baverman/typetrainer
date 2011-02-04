@@ -77,6 +77,10 @@ class Filler(object):
     def strip_non_word_chars(self, string):
         return Filler.filter_non_word.sub('', string)
 
+    def get_available_parts_for(self, key):
+        return 1.0
+
+
 def get_filler():
     words = list(split_to_words(help_text))
     return Filler(words)
