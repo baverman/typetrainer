@@ -16,7 +16,7 @@ available_keyboards = (
     (n130_dvp_keyboard, _('Programmer Dvorak zones'), 'n130_dvp'),
 )
 
-RHYTHM_ERROR_THRESHOLD = 1.7   # Miss value from average gab between chars
+RHYTHM_ERROR_THRESHOLD = 1.7   # Miss value from average time gap between chars
 TYPO_ERROR_WEIGHT = 1.0
 RHYTHM_ERROR_WEIGHT = 0.7
 CORRECT_WEIGHT = 1.0
