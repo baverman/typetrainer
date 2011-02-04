@@ -112,9 +112,14 @@ class Main(BuilderAware):
                     errors += 1
 
             err = self.get_error(self.typed_chars)
-            if err:
-                self.filler.change_distribution(err, 0.8, True)
-                self.retype_lb.set_text(err)
+            while err:
+                volume = self.filler.get_available_parts_for(err)
+                if volume > 0.005:
+                    self.filler.change_distribution(err, 0.8, True)
+                    self.retype_lb.set_text(err)
+                    break
+
+                err = err[1:]
             else:
                 self.filler.reset_distribution()
                 self.retype_lb.set_text('')

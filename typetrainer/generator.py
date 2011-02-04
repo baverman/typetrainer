@@ -84,6 +84,9 @@ class Parts(object):
 
         return ch
 
+    def count(self, part):
+        return sum(1 if part in p else 0 for p in self.parts)
+
     def choice(self, rnd):
         if not self.choicer:
             self.choicer = self.make_choicer()

@@ -73,3 +73,15 @@ class Filler(object):
                 result += c
 
         return result
+
+    def get_available_parts_for(self, key):
+        result = total = 0
+        for p in self.other.values():
+            result += p.count(key)
+            total += len(p.parts)
+
+        for p in self.first.values():
+            result += p.count(key)
+            total += len(p.parts)
+
+        return result / float(total)
