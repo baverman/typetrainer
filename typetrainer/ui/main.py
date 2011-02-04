@@ -16,12 +16,12 @@ available_keyboards = (
     (n130_dvp_keyboard, _('Programmer Dvorak zones'), 'n130_dvp'),
 )
 
-RHITM_ERROR_THRESHOLD = 1.7
-RHITM_ERROR_FACTOR = 3.0
-ERROR_SINK_VALUE = 3.0
-TYPO_ERROR_FACTOR = 5.0
-ERROR_RETYPE_THRESHOLD = 7.0
+RHYTHM_ERROR_THRESHOLD = 1.7   # Miss value from average gab between chars
+TYPO_ERROR_WEIGHT = 1.0
+RHYTHM_ERROR_WEIGHT = 0.7
+CORRECT_WEIGHT = 1.0
 CHARS_HISTORY_LENGTH = 500
+RETYPE_THRESHOLD = 0.3        # error/correct relation
 
 class Main(BuilderAware):
     """glade-file: main.glade"""
@@ -111,7 +111,6 @@ class Main(BuilderAware):
                     errors += 1
 
             err = self.get_error(self.typed_chars)
-            err = 'tb'
             if err:
                 self.filler.change_distribution(err, 0.8, True)
                 self.retype_lb.set_text(err)
@@ -140,12 +139,12 @@ class Main(BuilderAware):
             except KeyError:
                 err = errors[correct_char] = {'bad':0.0, 'all':0.0, 'prevs':defaultdict(int)}
 
-            if not is_correct or gap / avg > RHITM_ERROR_THRESHOLD:
-                err['bad'] += 1.0
+            if not is_correct or gap / avg > RHYTHM_ERROR_THRESHOLD:
+                err['bad'] += RHYTHM_ERROR_WEIGHT if is_correct else TYPO_ERROR_WEIGHT
                 if prev_char:
                     err['prevs'][prev_char] += 1
 
-            err['all'] += 1.0
+            err['all'] += CORRECT_WEIGHT
 
         max_value = 0
         err_char = prevs = None
@@ -157,7 +156,7 @@ class Main(BuilderAware):
                     max_value = value
                     err_char, prevs = ch, r['prevs']
 
-        if max_value > 0.3:
+        if max_value > RETYPE_THRESHOLD:
             pchar = ''
             mx = max(prevs.values()) if prevs else 0
             if mx > 1:
