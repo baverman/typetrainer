@@ -8,6 +8,10 @@ def join_to_settings_dir(*args):
     config_dir = os.getenv('XDG_CONFIG_HOME', expanduser('~/.config'))
     return join(config_dir, 'typetrainer', *args)
 
+def join_to_data_dir(*args):
+    config_dir = os.getenv('XDG_DATA_HOME', expanduser('~/.local/share'))
+    return join(config_dir, 'typetrainer', *args)
+
 def make_missing_dirs(filename):
     path = dirname(filename)
     if not exists(path):

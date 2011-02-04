@@ -26,11 +26,12 @@ RETYPE_THRESHOLD = 0.3        # error/correct relation
 class Main(BuilderAware):
     """glade-file: main.glade"""
 
-    def __init__(self, config, filler, kbd_drawer):
+    def __init__(self, config, filler, stat, kbd_drawer):
         BuilderAware.__init__(self, join_to_file_dir(__file__, 'main.glade'))
 
         self.config = config
         self.filler = filler
+        self.stat = stat
         self.kbd_drawer = kbd_drawer
         self.typed_chars = deque([], CHARS_HISTORY_LENGTH)
         self.errors = defaultdict(float)
@@ -118,9 +119,12 @@ class Main(BuilderAware):
                 self.filler.reset_distribution()
                 self.retype_lb.set_text('')
 
-            self.stat_lb.set_text(
-                '%d / %d%%' % (int((len(cur_text) + 1) * 60.0 / delta),
-                    int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text))))
+            cpm = int((len(cur_text) + 1) * 60.0 / delta)
+            accuracy = int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text))
+            self.stat_lb.set_text('%d / %d%%' % (cpm, accuracy))
+
+            if self.filler.name:
+                self.stat.log(self.filler.name, cpm, accuracy)
 
         self.fill()
 
@@ -156,6 +160,8 @@ class Main(BuilderAware):
                     max_value = value
                     err_char, prevs = ch, r['prevs']
 
+        #print
+
         if max_value > RETYPE_THRESHOLD:
             pchar = ''
             mx = max(prevs.values()) if prevs else 0
@@ -164,7 +170,6 @@ class Main(BuilderAware):
                 if len(pchars) == 1:
                     pchar = pchars[0]
 
-            #print '!!!', pchar, err_char, '\n\n'
             return pchar + err_char
         else:
             return None

@@ -34,13 +34,20 @@ def run():
         filler = tutors.help.get_filler()
 
     import gtk
+    import os.path
 
     from typetrainer.ui import idle
     from typetrainer.ui.main import Main
     from typetrainer.ui import kbd
+    from typetrainer.stat import FileStatistic
+    from typetrainer.util import make_missing_dirs, join_to_data_dir
+
+    fake_stat = join_to_data_dir('fake_stat')
+    make_missing_dirs(fake_stat)
+    stat = FileStatistic(os.path.dirname(fake_stat))
 
     kbd_layout = getattr(kbd, config['KEYBOARD'] + '_keyboard')
-    app = Main(config, filler, kbd.KeyboardDrawer(kbd_layout))
+    app = Main(config, filler, stat, kbd.KeyboardDrawer(kbd_layout))
     app.window.show()
     idle(app.fill)
 
