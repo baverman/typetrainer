@@ -252,6 +252,10 @@ class Main(BuilderAware):
         item.connect('activate', self.on_open_file_activate)
         menu.append(item)
 
+        item = gtk.MenuItem(_(u'_Statistic'))
+        item.connect('activate', self.on_stat_activate)
+        menu.append(item)
+
         menu.show_all()
         menu.popup(None, None, None, event.button, event.time)
         return True
@@ -315,3 +319,9 @@ class Main(BuilderAware):
             self.window.set_title('Typetrainer: ' + self.filler.filename)
         else:
             self.window.set_title('Typetrainer')
+
+    def on_stat_activate(self, item):
+        from .stat import StatWindow
+
+        window = StatWindow(self.window, self.stat)
+        window.window.show_all()
