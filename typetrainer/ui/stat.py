@@ -2,6 +2,9 @@ from datetime import datetime
 
 import gtk
 
+from . import BuilderAware
+from ..util import join_to_file_dir
+
 class StatDrawer(gtk.DrawingArea):
     __gsignals__ = { "expose-event": "override" }
 
@@ -114,18 +117,20 @@ class StatDrawer(gtk.DrawingArea):
         cr.show_text(label)
 
 
-class StatWindow(object):
+class StatWindow(BuilderAware):
+    """glade-file: stat.glade"""
+
     def __init__(self, parent, stat):
+        BuilderAware.__init__(self, join_to_file_dir(__file__, 'stat.glade'))
+
         self.stat = stat
 
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        self.window.set_default_size(600, 400)
-        self.window.set_modal(True)
         self.window.set_transient_for(parent)
 
         self.drawer = StatDrawer()
-        self.window.add(self.drawer)
+        self.frame.add(self.drawer)
 
-        self.drawer.set_data(stat.get('en.basic', 97))
+        self.acc_adj.value = 97
 
+    def on_acc_adj_value_changed(self, adj):
+        self.drawer.set_data(self.stat.get('en.basic', adj.value))
