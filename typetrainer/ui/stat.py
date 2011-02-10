@@ -85,15 +85,32 @@ class StatDrawer(gtk.DrawingArea):
         cr.set_font_size(0.4)
         for x in range(mindt, maxdt+1):
             y = mincpm*hfactor + 1
-            self.draw_label(cr, str(datetime.fromordinal(x).day), x-0.5, y, 1.0, 1.0, 0.5, -0.8)
+            dt = datetime.fromordinal(x)
+            if dt.weekday() >= 5:
+                cr.set_source_rgb(0.8, 0.0, 0.0)
+            else:
+                cr.set_source_rgb(0.0, 0.0, 0.0)
 
+            self.draw_label(cr, str(dt.day), x-0.5, y, 1.0, 1.0, 0.5, -0.8)
+
+            if dt.day == 1:
+                cr.set_font_size(0.6)
+                cr.set_source_rgb(0.0, 0.3, 0.0)
+                x, _ = self.get_text_pos(cr, '1', x-0.5, y, 1.0, 1.0, 0.5, -0.8)
+                self.draw_label(cr, dt.strftime('%B'), x, y, 5.0, 1.0, 0.0, 1.0)
+                cr.set_font_size(0.4)
+
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         for y in range(mincpm, maxcpm, 10):
             self.draw_label(cr, str(y), mindt, y*hfactor+0.5, 1.5, 1.0, -1.2, -0.5)
 
-    def draw_label(self, cr, label, x, y, w, h, xalign, yalign):
+    def get_text_pos(self, cr, label, x, y, w, h, xalign, yalign):
         fascent, fdescent, fheight, fxadvance, fyadvance = cr.font_extents()
         xbearing, ybearing, width, height, xadvance, yadvance = (cr.text_extents(label))
-        cr.move_to(x + w * xalign - xbearing - width * xalign, y + h * yalign - fdescent - fheight * yalign)
+        return x + w * xalign - xbearing - width * xalign, y + h * yalign - fdescent - fheight * yalign
+
+    def draw_label(self, cr, label, x, y, w, h, xalign, yalign):
+        cr.move_to(*self.get_text_pos(cr, label, x, y, w, h, xalign, yalign))
         cr.show_text(label)
 
 
