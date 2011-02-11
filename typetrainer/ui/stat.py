@@ -43,7 +43,7 @@ class StatDrawer(gtk.DrawingArea):
 
         mincpm = min(self.data.values(), key=lambda r: r[0])[0]
         maxcpm = max(self.data.values(), key=lambda r: r[0])[0]
-        gap = maxcpm - mincpm
+        gap = max(maxcpm - mincpm, 34)
 
         mincpm = int(max(mincpm - gap * 0.3, 0) / 10.0) * 10
         maxcpm = int( (maxcpm + gap * 0.3) / 10.0 + 0.9 ) * 10
@@ -127,7 +127,7 @@ class StatDrawer(gtk.DrawingArea):
 
         cr.set_source_rgb(0.0, 0.0, 0.0)
         for y in range(mincpm, maxcpm, 10):
-            self.draw_label(cr, str(y), mindt, y*hfactor+0.5, 1.5, 1.0, -1.2, -0.5)
+            self.draw_label(cr, str(y), mindt-1.5, y*hfactor+0.5, 1.5, 1.0, 0.8, -0.5)
 
     def get_text_pos(self, cr, label, x, y, w, h, xalign, yalign):
         fascent, fdescent, fheight, fxadvance, fyadvance = cr.font_extents()
