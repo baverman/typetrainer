@@ -40,6 +40,7 @@
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="model">tutor_ls</property>
+                <signal name="changed" handler="on_tutor_cb_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext1"/>
                   <attributes>

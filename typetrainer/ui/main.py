@@ -323,5 +323,9 @@ class Main(BuilderAware):
     def on_stat_activate(self, item):
         from .stat import StatWindow
 
-        window = StatWindow(self.window, self.stat)
+        tutor = self.filler.name
+        if tutor not in available_tutors:
+            tutor = 'en.basic'
+
+        window = StatWindow(self.window, self.stat, tutor)
         window.window.show_all()

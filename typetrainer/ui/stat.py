@@ -1,9 +1,10 @@
+import os, os.path
 from datetime import datetime
-
-import gtk
 import math
 
-from . import BuilderAware
+import gtk
+
+from . import BuilderAware, idle, refresh_gui
 from ..util import join_to_file_dir
 
 def median(values):
@@ -141,7 +142,7 @@ class StatDrawer(gtk.DrawingArea):
 class StatWindow(BuilderAware):
     """glade-file: stat.glade"""
 
-    def __init__(self, parent, stat):
+    def __init__(self, parent, stat, tutor):
         BuilderAware.__init__(self, join_to_file_dir(__file__, 'stat.glade'))
 
         self.stat = stat
@@ -151,7 +152,36 @@ class StatWindow(BuilderAware):
         self.drawer = StatDrawer()
         self.frame.add(self.drawer)
 
+        self.tutor = tutor
         self.acc_adj.value = 97
+        idle(self.fill_tutor_cb)
 
     def on_acc_adj_value_changed(self, adj):
-        self.drawer.set_data(self.stat.get('en.basic', adj.value))
+        self.refresh()
+
+    def refresh(self):
+        self.drawer.set_data(self.stat.get(self.tutor, self.acc_adj.value))
+
+    def fill_tutor_cb(self):
+        root = self.stat.root
+        for name in os.listdir(root):
+            fname = os.path.join(root, name)
+            try:
+                with open(fname) as f:
+                    tname = f.readline().strip()
+                    if fname == self.stat.get_filename(tname):
+                        self.tutor_ls.append((fname, tname))
+            except IOError:
+                pass
+
+            refresh_gui()
+
+        for i, (fname, tname) in enumerate(self.tutor_ls):
+            if tname == self.tutor:
+                self.tutor_cb.set_active(i)
+
+    def on_tutor_cb_changed(self, cb):
+        it = cb.get_active_iter()
+        if it:
+            self.tutor = self.tutor_ls.get_value(it, 1)
+            self.refresh()
