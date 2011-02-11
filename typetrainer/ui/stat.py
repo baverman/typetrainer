@@ -1,9 +1,17 @@
 from datetime import datetime
 
 import gtk
+import math
 
 from . import BuilderAware
 from ..util import join_to_file_dir
+
+def median(values):
+    values = sorted(values)
+    a = int((len(values) + 1) / 2)
+    b = a - len(values) % 2
+
+    return ( values[a-1] + values[b] ) / 2.0
 
 class StatDrawer(gtk.DrawingArea):
     __gsignals__ = { "expose-event": "override" }
@@ -50,23 +58,36 @@ class StatDrawer(gtk.DrawingArea):
 
         self.draw_grid(cr, mindt, maxdt, mincpm, maxcpm, hfactor)
 
-        cr.set_source_rgb(0.2, 0.2, 0.2)
+        data = sorted(self.data.iteritems(), key=lambda r: r[0])
+
+        cr.set_source_rgb(0.2, 0.4, 0.2)
         cr.set_line_width(0.1)
 
-        moved = False
-        for dt in sorted(self.data):
-            x, y = float(dt.toordinal()), float(self.data[dt][0]) * hfactor
-            if not moved:
-                cr.move_to(x, y)
-                moved = True
-            else:
-                cr.line_to(x, y)
+        data.insert(0, (None, (data[0][1][0], None)))
+        data.insert(0, (None, (data[0][1][0], None)))
+        data.append((None, (data[-1][1][0], None)))
+        data.append((None, (data[-1][1][0], None)))
+        cr.new_sub_path()
+        for i in range(len(data)-4):
+            x = float(data[i+2][0].toordinal())
+            y = median([r[1][0] for r in data[i:i+5]])
+            cr.line_to(x, y*hfactor)
 
         cr.stroke()
 
+        cr.set_line_width(0.02)
+        cr.new_sub_path()
+        for dt, (cpm, cnt) in data[2:-2]:
+            x, y = float(dt.toordinal()), cpm * hfactor
+            cr.arc(x, y, 0.2, 0, math.pi*2)
+            cr.set_source_rgb(0.88627, 0.68627, 0.88627)
+            cr.fill_preserve()
+            cr.set_source_rgb(0.2, 0.2, 0.2)
+            cr.stroke()
+
     def draw_grid(self, cr, mindt, maxdt, mincpm, maxcpm, hfactor):
         cr.set_source_rgb(0.8, 0.8, 0.8)
-        cr.set_line_width(0.03)
+        cr.set_line_width(0.02)
         for x in range(mindt, maxdt+1):
             cr.move_to(x, mincpm*hfactor)
             cr.line_to(x, maxcpm*hfactor)
