@@ -7,6 +7,7 @@ DIR = os.path.join(os.path.dirname(__file__), 'locale')
 
 if gettext.find(APP, DIR):
     locale.setlocale(locale.LC_ALL, '')
+    locale.bindtextdomain(APP, DIR)
     gettext.bindtextdomain(APP, DIR)
     gettext.textdomain(APP)
 

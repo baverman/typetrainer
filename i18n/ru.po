@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-31 14:37+1000\n"
+"POT-Creation-Date: 2011-02-12 10:22+1000\n"
 "PO-Revision-Date: 2011-01-30 19:31+1000\n"
 "Last-Translator:  <bobrov@vl.ru>\n"
 "Language-Team: Russian\n"
@@ -76,10 +76,26 @@ msgstr "Зоны ЫВАМ"
 msgid "Programmer Dvorak zones"
 msgstr "Зоны программерского Дворака"
 
-#: ../typetrainer/ui/main.py:247
+#: ../typetrainer/ui/main.py:255
+msgid "_Statistic"
+msgstr "_Статистика"
+
+#: ../typetrainer/ui/main.py:264
 msgid "Open file..."
 msgstr "Открытие файла..."
 
-#: ../typetrainer/ui/main.py:266
+#: ../typetrainer/ui/main.py:280
 msgid "Opening..."
 msgstr "Открываю..."
+
+#: tmp/main.glade.h:1
+msgid "Type Trainer"
+msgstr ""
+
+#: tmp/stat.glade.h:1
+msgid "Accuracy:"
+msgstr "Точность:"
+
+#: tmp/stat.glade.h:2
+msgid "Statistic"
+msgstr "Статистика"

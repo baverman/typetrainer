@@ -19,6 +19,7 @@ def refresh_gui():
 class BuilderAware(object):
     def __init__(self, glade_file):
         self.gtk_builder = gtk.Builder()
+        self.gtk_builder.set_translation_domain('typetrainer')
         self.gtk_builder.add_from_file(glade_file)
         self.gtk_builder.connect_signals(self)
 
