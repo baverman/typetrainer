@@ -14,6 +14,9 @@ def median(values):
 
     return ( values[a-1] + values[b] ) / 2.0
 
+def avg(values):
+    return sum(values) / float(len(values))
+
 class StatDrawer(gtk.DrawingArea):
     __gsignals__ = { "expose-event": "override" }
 
@@ -71,7 +74,7 @@ class StatDrawer(gtk.DrawingArea):
         cr.new_sub_path()
         for i in range(len(data)-4):
             x = float(data[i+2][0].toordinal())
-            y = median([r[1][0] for r in data[i:i+5]])
+            y = avg([r[1][0] for r in data[i:i+5]])
             cr.line_to(x, y*hfactor)
 
         cr.stroke()
