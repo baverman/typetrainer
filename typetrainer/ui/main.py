@@ -1,7 +1,7 @@
 import time
 from collections import defaultdict, deque
 
-import gtk
+import gtk, glib
 import pango
 
 from typetrainer.i18n import _
@@ -36,7 +36,8 @@ class Main(BuilderAware):
         self.typed_chars = deque([], CHARS_HISTORY_LENGTH)
         self.errors = defaultdict(float)
 
-        self.vbox.pack_start(self.kbd_drawer)
+        self.vbox.pack_start(self.kbd_drawer, False)
+        self.vbox.reorder_child(self.kbd_drawer, 3)
         self.kbd_drawer.set_size_request(-1, 280)
         self.kbd_drawer.show()
 
@@ -329,3 +330,10 @@ class Main(BuilderAware):
 
         window = StatWindow(self.window, self.stat, tutor)
         window.window.show_all()
+
+    def on_prefs_ex_activate(self, expander):
+        def resize():
+            self.window.resize(self.window.get_size()[0], self.window.size_request()[1])
+            return False
+
+        glib.timeout_add(100, resize)
