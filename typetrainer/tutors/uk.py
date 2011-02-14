@@ -22,11 +22,11 @@ def make_lengths_seq(words):
             yield t, w
 
 def split_to_words(text, level):
-    filter_non_word = re.compile(u'(?iu)[^а-я\'ієї]+')
+    filter_non_word = re.compile(u'(?iu)[^а-я\'ієїґ]+')
 
     charsets = {
-        'basic': u'(?iu)[а-я\'ієї]+',
-        'advanced': u'(?iu)[а-я\'ієї,.:;"!]+'
+        'basic': u'(?iu)[а-я\'ієїґ]+',
+        'advanced': u'(?iu)[а-я\'ієїґ,.:;"!]+'
     }
 
     if level == 'basic':
