@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-14 16:25+1000\n"
+"POT-Creation-Date: 2011-02-14 17:15+1000\n"
 "PO-Revision-Date: 2011-01-30 19:31+1000\n"
 "Last-Translator:  <bobrov@vl.ru>\n"
 "Language-Team: Russian\n"
@@ -43,19 +43,27 @@ msgstr "Нельзя прочитать [%s]"
 msgid "English"
 msgstr "Английский"
 
-#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/ru.py:11
+#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/uk.py:11
+#: ../typetrainer/tutors/ru.py:11
 msgid "Basic"
 msgstr "Простой"
 
-#: ../typetrainer/tutors/en.py:11
+#: ../typetrainer/tutors/en.py:11 ../typetrainer/tutors/uk.py:12
+#: ../typetrainer/tutors/ru.py:12
 msgid "Advanced"
 msgstr "Сложный"
+
+#: ../typetrainer/tutors/uk.py:8
+msgid "Ukraine"
+msgstr "Украинский"
 
 #: ../typetrainer/tutors/help.py:8
 msgid ""
 "Expand misc panel and open file with words. Press Ctrl+O and choose file "
 "with words."
-msgstr "Разверните дополнительную панель и откройте файл со словами. Нажмите Контрол+О и выберите файл."
+msgstr ""
+"Разверните дополнительную панель и откройте файл со словами. Нажмите Контрол"
+"+О и выберите файл."
 
 #: ../typetrainer/tutors/__init__.py:20
 msgid "Choose file with words."

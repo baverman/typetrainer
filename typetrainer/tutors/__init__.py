@@ -2,9 +2,9 @@ import sys
 
 from typetrainer.i18n import _
 
-from . import en, ru
+from . import en, ru, uk
 
-available_tutors = (en, ru)
+available_tutors = (en, ru, uk)
 
 def get_filler(tutor, filename):
     fullname = tutor

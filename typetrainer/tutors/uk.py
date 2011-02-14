@@ -4,8 +4,8 @@ from .common import Filler
 
 from typetrainer.i18n import _
 
-name = 'ru'
-label = _('Russian')
+name = 'uk'
+label = _('Ukraine')
 
 levels = (
     ('basic', _('Basic')),
@@ -22,11 +22,11 @@ def make_lengths_seq(words):
             yield t, w
 
 def split_to_words(text, level):
-    filter_non_word = re.compile(u'(?iu)[^а-я]+')
+    filter_non_word = re.compile(u'(?iu)[^а-я\'ієї]+')
 
     charsets = {
-        'basic': u'(?iu)[а-я]+',
-        'advanced': u'(?iu)[а-я,.:;"!]+'
+        'basic': u'(?iu)[а-я\'ієї]+',
+        'advanced': u'(?iu)[а-я\'ієї,.:;"!]+'
     }
 
     if level == 'basic':
@@ -55,6 +55,6 @@ def split_to_words(text, level):
 def get_filler(text, level):
     words = list(split_to_words(text, level))
     if not words:
-        words = list(split_to_words(u'Пустое упражнение. Выберите другое или загрузите '
-            u'соответствующий файл', level))
+        words = list(split_to_words(u'Порожня вправа. Оберіть іншу та завантажте '
+                                    u'відповідний файл', level))
     return Filler(words, make_lengths_seq)

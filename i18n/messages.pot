@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-14 16:25+1000\n"
+"POT-Creation-Date: 2011-02-14 17:15+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,12 +40,18 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/ru.py:11
+#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/uk.py:11
+#: ../typetrainer/tutors/ru.py:11
 msgid "Basic"
 msgstr ""
 
-#: ../typetrainer/tutors/en.py:11
+#: ../typetrainer/tutors/en.py:11 ../typetrainer/tutors/uk.py:12
+#: ../typetrainer/tutors/ru.py:12
 msgid "Advanced"
+msgstr ""
+
+#: ../typetrainer/tutors/uk.py:8
+msgid "Ukraine"
 msgstr ""
 
 #: ../typetrainer/tutors/help.py:8
