@@ -1,1 +1,1 @@
-VERSION = '0.4-git'
+VERSION = '0.5'
