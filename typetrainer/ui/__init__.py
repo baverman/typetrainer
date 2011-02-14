@@ -39,3 +39,26 @@ class BuilderAware(object):
 
         setattr(self, name, obj)
         return obj
+
+class ShortcutActivator(object):
+    def __init__(self, window):
+        self.window = window
+        self.accel_group = gtk.AccelGroup()
+        self.window.add_accel_group(self.accel_group)
+
+        self.shortcuts = {}
+        self.pathes = {}
+
+    def bind(self, accel, callback, *args):
+        key, modifier = gtk.accelerator_parse(accel)
+        self.shortcuts[(key, modifier)] = callback, args
+
+        self.accel_group.connect_group(key, modifier, gtk.ACCEL_VISIBLE, self.activate)
+
+    def get_callback_and_args(self, *key):
+        return self.shortcuts[key]
+
+    def activate(self, group, window, key, modifier):
+        cb, args = self.get_callback_and_args(key, modifier)
+        result = cb(*args)
+        return result is None or result

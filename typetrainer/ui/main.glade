@@ -244,6 +244,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="on_recent_bt_clicked"/>
                             <child>
                               <object class="GtkArrow" id="arrow1">
                                 <property name="visible">True</property>
@@ -280,6 +281,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_underline">True</property>
+                        <signal name="clicked" handler="on_stat_bt_clicked"/>
                         <child>
                           <object class="GtkLabel" id="label5">
                             <property name="visible">True</property>

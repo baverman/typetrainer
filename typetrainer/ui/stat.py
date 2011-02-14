@@ -4,7 +4,7 @@ import math
 
 import gtk
 
-from . import BuilderAware, idle, refresh_gui
+from . import BuilderAware, idle, refresh_gui, ShortcutActivator
 from ..util import join_to_file_dir
 
 def median(values):
@@ -154,6 +154,8 @@ class StatWindow(BuilderAware):
 
         self.drawer = StatDrawer()
         self.frame.add(self.drawer)
+        self.activator = ShortcutActivator(self.window)
+        self.activator.bind('Escape', self.window.destroy)
 
         self.tutor = tutor
         self.acc_adj.value = 97

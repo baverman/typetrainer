@@ -5,7 +5,7 @@ import gtk, glib
 import pango
 
 from typetrainer.i18n import _
-from typetrainer.ui import idle, refresh_gui, BuilderAware, block_handler
+from typetrainer.ui import idle, refresh_gui, BuilderAware, block_handler, ShortcutActivator
 from typetrainer.util import join_to_file_dir
 from typetrainer.tutors import available_tutors, get_filler
 from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard
@@ -52,6 +52,12 @@ class Main(BuilderAware):
 
         self.update_title()
 
+        self.activator = ShortcutActivator(self.window)
+        self.activator.bind('<ctrl>q', self.quit)
+        self.activator.bind('<ctrl>s', self.on_stat_bt_clicked)
+        self.activator.bind('<ctrl>r', self.on_recent_bt_clicked)
+        self.activator.bind('<ctrl>o', self.on_open_bt_clicked)
+
         idle(self.fill_tutors)
         idle(self.fill_layouts)
 
@@ -89,9 +95,12 @@ class Main(BuilderAware):
         self.type_entry.set_max_length(entry.get_text_length())
         self.totype_text = unicode(entry.get_text())
 
-    def on_window_delete_event(self, *args):
+    def quit(self):
         self.config.save()
         gtk.main_quit()
+
+    def on_window_delete_event(self, *args):
+        self.quit()
 
     def on_type_entry_changed(self, *args):
         if not self.start_time:
@@ -231,26 +240,15 @@ class Main(BuilderAware):
 
         self.fill_levels()
 
-    def fill_levels(self, fallback=None):
+    def fill_levels(self):
         self.level_ls.clear()
         tutor = self.get_selected_item(self.tutor_cb)
         if tutor:
-            fit = None
-            ait = None
             for id, label in tutor.levels:
                 it = self.level_ls.append((id, label))
                 if id == self.filler.level:
-                    ait = it
-
-                if id == fallback:
-                    fit = it
-
-            if not ait:
-                ait = fit
-
-            if ait:
-                with block_handler(self.level_cb, self.on_level_cb_changed):
-                    self.level_cb.set_active_iter(ait)
+                    with block_handler(self.level_cb, self.on_level_cb_changed):
+                        self.level_cb.set_active_iter(it)
 
     def fill_layouts(self):
         self.layout_ls.clear()
@@ -260,22 +258,21 @@ class Main(BuilderAware):
                 with block_handler(self.layout_cb, self.on_layout_cb_changed):
                     self.layout_cb.set_active_iter(it)
 
-    def noop(self):
+    def on_recent_bt_clicked(self, *args):
         if 'RECENT_FILES' in self.config and self.config['RECENT_FILES']:
-            item = None
+            menu = gtk.Menu()
+            menu.set_reserve_toggle_size(False)
             for fname in self.config['RECENT_FILES']:
+                if fname == self.filler.filename:
+                    continue
                 item = gtk.MenuItem(fname)
                 item.connect('activate', self.on_filename_activate, fname)
                 menu.append(item)
 
-            menu.append(gtk.SeparatorMenuItem())
+            menu.show_all()
+            menu.popup(None, None, None, 1, 0)
 
-
-        menu.show_all()
-        menu.popup(None, None, None, event.button, event.time)
-        return True
-
-    def on_open_bt_clicked(self, sender):
+    def on_open_bt_clicked(self, *args):
         dialog = gtk.FileChooserDialog(_("Open file..."),
             None,
             gtk.FILE_CHOOSER_ACTION_OPEN,
@@ -297,6 +294,7 @@ class Main(BuilderAware):
 
         self.filler = get_filler(tutor, filename)
         self.fill()
+        self.fill_tutors()
         self.config._add_recent_file(filename)
         self.update_title()
 
@@ -304,10 +302,7 @@ class Main(BuilderAware):
         self.config['FILE'] = filename
 
     def get_tutor_for_file(self, filename):
-        tutor = self.filler.name
-        if tutor not in available_tutors:
-            tutor = 'en.basic'
-
+        tutor = self.filler.fullname or 'en.basic'
         return self.config._get_tutor_for_file(filename, tutor)
 
     def get_selected_item(self, cb, column=0):
@@ -320,8 +315,11 @@ class Main(BuilderAware):
     def on_tutor_cb_changed(self, sender):
         tutor = self.get_selected_item(sender)
         if tutor:
-            self.fill_levels(tutor.levels[0][0])
+            self.fill_levels()
             level = self.get_selected_item(self.level_cb)
+            if not level:
+                level = tutor.levels[0][0]
+
             tutor = '%s.%s' % (tutor.name, level)
             self.config._set_tutor_for_file(self.filler.filename, tutor)
             idle(self.update_filler, tutor, self.filler.filename)
@@ -350,13 +348,10 @@ class Main(BuilderAware):
         else:
             self.window.set_title('Typetrainer')
 
-    def on_stat_activate(self, item):
+    def on_stat_bt_clicked(self, *args):
         from .stat import StatWindow
 
-        tutor = self.filler.name
-        if tutor not in available_tutors:
-            tutor = 'en.basic'
-
+        tutor = self.filler.fullname or 'en.basic'
         window = StatWindow(self.window, self.stat, tutor)
         window.window.show_all()
 
