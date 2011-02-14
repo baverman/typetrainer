@@ -5,12 +5,11 @@ import re
 from typetrainer.generator import make_word_chain
 from typetrainer.i18n import _
 
-help_text = _(u'Press right mouse button. Click right mouse button to select other tutors. '
-    u'Choose a file with words. Click right mouse button at any window spot.')
+help_text = _(u'Expand misc panel and open file with words. Press Ctrl+O and choose file with words.')
 
 def split_to_words(text):
-    filter_non_word = re.compile(u'(?ui)[^a-zа-я\']+')
-    for word in re.findall(u'(?iu)[a-zа-я\',."]+', text):
+    filter_non_word = re.compile(u'(?ui)[^a-zа-я\'+]+')
+    for word in re.findall(u'(?iu)[a-zа-я\',.+"]+', text):
         non_word_cars = ',.'
         esym = None
         for c in non_word_cars:

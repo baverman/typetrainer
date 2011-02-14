@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-12 10:22+1000\n"
+"POT-Creation-Date: 2011-02-14 16:25+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,26 +36,30 @@ msgstr ""
 msgid "Can't read [%s]"
 msgstr ""
 
+#: ../typetrainer/tutors/en.py:7
+msgid "English"
+msgstr ""
+
+#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/ru.py:11
+msgid "Basic"
+msgstr ""
+
+#: ../typetrainer/tutors/en.py:11
+msgid "Advanced"
+msgstr ""
+
 #: ../typetrainer/tutors/help.py:8
 msgid ""
-"Press right mouse button. Click right mouse button to select other tutors. "
-"Choose a file with words. Click right mouse button at any window spot."
+"Expand misc panel and open file with words. Press Ctrl+O and choose file "
+"with words."
 msgstr ""
 
-#: ../typetrainer/tutors/__init__.py:6
-msgid "Basic English"
-msgstr ""
-
-#: ../typetrainer/tutors/__init__.py:7
-msgid "Advanced English"
-msgstr ""
-
-#: ../typetrainer/tutors/__init__.py:8
-msgid "Basic Russian"
-msgstr ""
-
-#: ../typetrainer/tutors/__init__.py:19
+#: ../typetrainer/tutors/__init__.py:20
 msgid "Choose file with words."
+msgstr ""
+
+#: ../typetrainer/tutors/ru.py:8
+msgid "Russian"
 msgstr ""
 
 #: ../typetrainer/ui/main.py:14
@@ -70,20 +74,40 @@ msgstr ""
 msgid "Programmer Dvorak zones"
 msgstr ""
 
-#: ../typetrainer/ui/main.py:255
-msgid "_Statistic"
-msgstr ""
-
-#: ../typetrainer/ui/main.py:264
+#: ../typetrainer/ui/main.py:277
 msgid "Open file..."
 msgstr ""
 
-#: ../typetrainer/ui/main.py:280
+#: ../typetrainer/ui/main.py:293
 msgid "Opening..."
 msgstr ""
 
 #: tmp/main.glade.h:1
+msgid "L_ayout"
+msgstr ""
+
+#: tmp/main.glade.h:2
 msgid "Type Trainer"
+msgstr ""
+
+#: tmp/main.glade.h:3
+msgid "_Level"
+msgstr ""
+
+#: tmp/main.glade.h:4
+msgid "_Misc"
+msgstr ""
+
+#: tmp/main.glade.h:5
+msgid "_Open"
+msgstr ""
+
+#: tmp/main.glade.h:6
+msgid "_Statistic"
+msgstr ""
+
+#: tmp/main.glade.h:7
+msgid "_Tutor"
 msgstr ""
 
 #: tmp/stat.glade.h:1

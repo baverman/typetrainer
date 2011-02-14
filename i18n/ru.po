@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: typetrainer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-12 10:22+1000\n"
+"POT-Creation-Date: 2011-02-14 16:25+1000\n"
 "PO-Revision-Date: 2011-01-30 19:31+1000\n"
 "Last-Translator:  <bobrov@vl.ru>\n"
 "Language-Team: Russian\n"
@@ -39,30 +39,31 @@ msgstr "Не найден генератор упражнений [%s]"
 msgid "Can't read [%s]"
 msgstr "Нельзя прочитать [%s]"
 
+#: ../typetrainer/tutors/en.py:7
+msgid "English"
+msgstr "Английский"
+
+#: ../typetrainer/tutors/en.py:10 ../typetrainer/tutors/ru.py:11
+msgid "Basic"
+msgstr "Простой"
+
+#: ../typetrainer/tutors/en.py:11
+msgid "Advanced"
+msgstr "Сложный"
+
 #: ../typetrainer/tutors/help.py:8
 msgid ""
-"Press right mouse button. Click right mouse button to select other tutors. "
-"Choose a file with words. Click right mouse button at any window spot."
-msgstr ""
-"Нажмите правую кнопку мыши. Чтобы разнообразить упражнение, нажмите правую "
-"кнопку мыши. Выберите файл с текстом. Щелкните в любом месте окна правой "
-"кнопкой."
+"Expand misc panel and open file with words. Press Ctrl+O and choose file "
+"with words."
+msgstr "Разверните дополнительную панель и откройте файл со словами. Нажмите Контрол+О и выберите файл."
 
-#: ../typetrainer/tutors/__init__.py:6
-msgid "Basic English"
-msgstr "Простой английский"
-
-#: ../typetrainer/tutors/__init__.py:7
-msgid "Advanced English"
-msgstr "Сложный английский"
-
-#: ../typetrainer/tutors/__init__.py:8
-msgid "Basic Russian"
-msgstr "Простой русский"
-
-#: ../typetrainer/tutors/__init__.py:19
+#: ../typetrainer/tutors/__init__.py:20
 msgid "Choose file with words."
 msgstr "Выберите файл со словами."
+
+#: ../typetrainer/tutors/ru.py:8
+msgid "Russian"
+msgstr "Русский"
 
 #: ../typetrainer/ui/main.py:14
 msgid "ASDF zones"
@@ -76,21 +77,41 @@ msgstr "Зоны ЫВАМ"
 msgid "Programmer Dvorak zones"
 msgstr "Зоны программерского Дворака"
 
-#: ../typetrainer/ui/main.py:255
-msgid "_Statistic"
-msgstr "_Статистика"
-
-#: ../typetrainer/ui/main.py:264
+#: ../typetrainer/ui/main.py:277
 msgid "Open file..."
 msgstr "Открытие файла..."
 
-#: ../typetrainer/ui/main.py:280
+#: ../typetrainer/ui/main.py:293
 msgid "Opening..."
 msgstr "Открываю..."
 
 #: tmp/main.glade.h:1
+msgid "L_ayout"
+msgstr "_Зоны"
+
+#: tmp/main.glade.h:2
 msgid "Type Trainer"
 msgstr ""
+
+#: tmp/main.glade.h:3
+msgid "_Level"
+msgstr "С_ложность"
+
+#: tmp/main.glade.h:4
+msgid "_Misc"
+msgstr "_Дополнительно"
+
+#: tmp/main.glade.h:5
+msgid "_Open"
+msgstr "_Открыть"
+
+#: tmp/main.glade.h:6
+msgid "_Statistic"
+msgstr "_Статистика"
+
+#: tmp/main.glade.h:7
+msgid "_Tutor"
+msgstr "_Упражнение"
 
 #: tmp/stat.glade.h:1
 msgid "Accuracy:"

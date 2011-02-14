@@ -232,11 +232,12 @@ class Main(BuilderAware):
 
     def fill_tutors(self):
         self.tutor_ls.clear()
-        for tutor in available_tutors:
-            it = self.tutor_ls.append((tutor, tutor.label))
-            if tutor.name == self.filler.name:
-                with block_handler(self.tutor_cb, self.on_tutor_cb_changed):
-                    self.tutor_cb.set_active_iter(it)
+        if self.filler.fullname:
+            for tutor in available_tutors:
+                it = self.tutor_ls.append((tutor, tutor.label))
+                if tutor.name == self.filler.name:
+                    with block_handler(self.tutor_cb, self.on_tutor_cb_changed):
+                        self.tutor_cb.set_active_iter(it)
 
         self.fill_levels()
 
