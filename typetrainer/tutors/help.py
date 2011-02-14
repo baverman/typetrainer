@@ -30,6 +30,9 @@ class Filler(object):
         self.chain = make_word_chain(words, self.dist)
         self.name = 'help'
         self.filename = None
+        self.tutor = None
+        self.fullname = None
+        self.level = None
 
     def get_next_word(self, prev=None):
         try:

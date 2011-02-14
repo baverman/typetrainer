@@ -5,15 +5,15 @@ import gtk, glib
 import pango
 
 from typetrainer.i18n import _
-from typetrainer.ui import idle, refresh_gui, BuilderAware
+from typetrainer.ui import idle, refresh_gui, BuilderAware, block_handler
 from typetrainer.util import join_to_file_dir
 from typetrainer.tutors import available_tutors, get_filler
 from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard
 
 available_keyboards = (
-    (n130_keyboard, _('ASDF zones'), 'n130'),
-    (n130_sdfv_keyboard, _('SDFV zones'), 'n130_sdfv'),
-    (n130_dvp_keyboard, _('Programmer Dvorak zones'), 'n130_dvp'),
+    (n130_keyboard, _('ASDF zones')),
+    (n130_sdfv_keyboard, _('SDFV zones')),
+    (n130_dvp_keyboard, _('Programmer Dvorak zones')),
 )
 
 RHYTHM_ERROR_THRESHOLD = 1.7   # Miss value from average time gap between chars
@@ -41,10 +41,23 @@ class Main(BuilderAware):
         self.kbd_drawer.set_size_request(-1, 280)
         self.kbd_drawer.show()
 
+        self.tutor_ls = gtk.ListStore(object, str)
+        self.tutor_cb.set_model(self.tutor_ls)
+
+        self.level_ls = gtk.ListStore(str, str)
+        self.level_cb.set_model(self.level_ls)
+
+        self.layout_ls = gtk.ListStore(object, str)
+        self.layout_cb.set_model(self.layout_ls)
+
         self.update_title()
+
+        idle(self.fill_tutors)
+        idle(self.fill_layouts)
 
     def fill(self):
         self.type_entry.set_text('')
+        self.type_entry.grab_focus()
         self.start_time = 0
         self.last_insert = 0
 
@@ -129,8 +142,8 @@ class Main(BuilderAware):
             accuracy = int((len(self.totype_text) - errors) * 100.0 / len(self.totype_text))
             self.stat_lb.set_text('%d / %d%%' % (cpm, accuracy))
 
-            if self.filler.name:
-                self.stat.log(self.filler.name, cpm, accuracy)
+            if self.filler.fullname:
+                self.stat.log(self.filler.fullname, cpm, accuracy)
 
         self.fill()
 
@@ -208,37 +221,46 @@ class Main(BuilderAware):
     def on_type_entry_delete_text(self, *args):
         self.last_insert = 0
 
-    def on_window_button_press_event(self, window, event):
-        if event.button != 3:
-            return False
+    def fill_tutors(self):
+        self.tutor_ls.clear()
+        for tutor in available_tutors:
+            it = self.tutor_ls.append((tutor, tutor.label))
+            if tutor.name == self.filler.name:
+                with block_handler(self.tutor_cb, self.on_tutor_cb_changed):
+                    self.tutor_cb.set_active_iter(it)
 
-        menu = gtk.Menu()
+        self.fill_levels()
 
-        if self.filler.name in available_tutors:
-            item = None
-            for id, label in available_tutors.items():
-                item = gtk.RadioMenuItem(item, label)
-                if id == self.filler.name:
-                    item.set_active(True)
+    def fill_levels(self, fallback=None):
+        self.level_ls.clear()
+        tutor = self.get_selected_item(self.tutor_cb)
+        if tutor:
+            fit = None
+            ait = None
+            for id, label in tutor.levels:
+                it = self.level_ls.append((id, label))
+                if id == self.filler.level:
+                    ait = it
 
-                item.connect('activate', self.on_tutor_activate, id)
-                menu.append(item)
+                if id == fallback:
+                    fit = it
 
-            menu.append(gtk.SeparatorMenuItem())
+            if not ait:
+                ait = fit
 
+            if ait:
+                with block_handler(self.level_cb, self.on_level_cb_changed):
+                    self.level_cb.set_active_iter(ait)
 
-        item = None
-        for kbd, label, name in available_keyboards:
-            item = gtk.RadioMenuItem(item, label)
+    def fill_layouts(self):
+        self.layout_ls.clear()
+        for kbd, label in available_keyboards:
+            it = self.layout_ls.append((kbd, label))
             if kbd is self.kbd_drawer.kbd:
-                item.set_active(True)
+                with block_handler(self.layout_cb, self.on_layout_cb_changed):
+                    self.layout_cb.set_active_iter(it)
 
-            item.connect('activate', self.on_keyboard_activate, kbd)
-            menu.append(item)
-
-        menu.append(gtk.SeparatorMenuItem())
-
-
+    def noop(self):
         if 'RECENT_FILES' in self.config and self.config['RECENT_FILES']:
             item = None
             for fname in self.config['RECENT_FILES']:
@@ -249,19 +271,11 @@ class Main(BuilderAware):
             menu.append(gtk.SeparatorMenuItem())
 
 
-        item = gtk.ImageMenuItem(gtk.STOCK_OPEN)
-        item.connect('activate', self.on_open_file_activate)
-        menu.append(item)
-
-        item = gtk.MenuItem(_(u'_Statistic'))
-        item.connect('activate', self.on_stat_activate)
-        menu.append(item)
-
         menu.show_all()
         menu.popup(None, None, None, event.button, event.time)
         return True
 
-    def on_open_file_activate(self, item):
+    def on_open_bt_clicked(self, sender):
         dialog = gtk.FileChooserDialog(_("Open file..."),
             None,
             gtk.FILE_CHOOSER_ACTION_OPEN,
@@ -296,24 +310,39 @@ class Main(BuilderAware):
 
         return self.config._get_tutor_for_file(filename, tutor)
 
-    def on_tutor_activate(self, item, tutor):
-        if item.get_active():
+    def get_selected_item(self, cb, column=0):
+        it = cb.get_active_iter()
+        if it:
+            return cb.get_model().get_value(it, column)
+        else:
+            return None
+
+    def on_tutor_cb_changed(self, sender):
+        tutor = self.get_selected_item(sender)
+        if tutor:
+            self.fill_levels(tutor.levels[0][0])
+            level = self.get_selected_item(self.level_cb)
+            tutor = '%s.%s' % (tutor.name, level)
             self.config._set_tutor_for_file(self.filler.filename, tutor)
             idle(self.update_filler, tutor, self.filler.filename)
 
     def on_filename_activate(self, item, filename):
         idle(self.update_filler, self.get_tutor_for_file(filename), filename)
 
-    def on_keyboard_activate(self, item, kbd):
-        if item.get_active():
-            for k, label, name in available_keyboards:
-                if k is kbd:
-                    self.config['KEYBOARD'] = name
-                    break
-            else:
-                self.config['KEYBOARD'] = None
+    def on_level_cb_changed(self, sender):
+        level = self.get_selected_item(sender)
+        if level:
+            tutor = self.get_selected_item(self.tutor_cb)
+            tutor = '%s.%s' % (tutor.name, level)
+            self.config._set_tutor_for_file(self.filler.filename, tutor)
+            idle(self.update_filler, tutor, self.filler.filename)
 
+    def on_layout_cb_changed(self, sender):
+        kbd = self.get_selected_item(sender)
+        if kbd:
+            self.config['KEYBOARD'] = kbd['name']
             idle(self.kbd_drawer.set_keyboard, kbd)
+            self.type_entry.grab_focus()
 
     def update_title(self):
         if self.filler.filename:
@@ -336,4 +365,4 @@ class Main(BuilderAware):
             self.window.resize(self.window.get_size()[0], self.window.size_request()[1])
             return False
 
-        glib.timeout_add(100, resize)
+        glib.timeout_add(200, resize)

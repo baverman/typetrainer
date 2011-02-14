@@ -17,6 +17,7 @@ space = ('', 0.3)
 
 n130_gap = 0.12
 n130_keyboard = {
+ 'name': 'n130',
  'keys': [
   [49,   10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  backspace],
   [tab,   24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  51],
@@ -52,6 +53,7 @@ n130_keyboard = {
 }
 
 n130_sdfv_keyboard = n130_keyboard.copy()
+n130_sdfv_keyboard['name'] = 'n130_sdfv'
 n130_sdfv_keyboard['zones'] = [
     ([3, 4, 7, 9, 10, 13], [3, 1, 4, 5, 1, 3, 0]),
     ([1, 3, 4, 6, 8, 9], [0, 3, 1, 4, 5, 1, 3]),
@@ -64,6 +66,7 @@ n130_sdfv_keyboard['main_keys'] = [
 ]
 
 n130_dvp_keyboard = n130_keyboard.copy()
+n130_dvp_keyboard['name'] = 'n130_dvp'
 n130_dvp_keyboard['zones'] = [
     ([3, 4, 5, 7, 9, 10, 11, 13], [1, 2, 3, 4, 5, 1, 2, 3, 0]),
     ([1, 2, 3, 4, 6, 8, 9, 10], [0, 1, 2, 3, 4, 5, 1, 2, 3]),

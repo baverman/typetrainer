@@ -10,7 +10,6 @@
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="type_hint">dialog</property>
-    <signal name="button_press_event" handler="on_window_button_press_event"/>
     <signal name="key_release_event" handler="on_key_event"/>
     <signal name="key_press_event" handler="on_key_event"/>
     <signal name="delete_event" handler="on_window_delete_event"/>
@@ -96,7 +95,9 @@
                       <object class="GtkLabel" id="label2">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Tutor</property>
+                        <property name="label" translatable="yes">_Tutor</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">tutor_cb</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -109,7 +110,7 @@
                     <child>
                       <object class="GtkComboBox" id="tutor_cb">
                         <property name="visible">True</property>
-                        <property name="model">tutor_ls</property>
+                        <signal name="changed" handler="on_tutor_cb_changed"/>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext1"/>
                           <attributes>
@@ -136,7 +137,9 @@
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Level</property>
+                        <property name="label" translatable="yes">_Level</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">level_cb</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -149,7 +152,7 @@
                     <child>
                       <object class="GtkComboBox" id="level_cb">
                         <property name="visible">True</property>
-                        <property name="model">level_ls</property>
+                        <signal name="changed" handler="on_level_cb_changed"/>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext2"/>
                           <attributes>
@@ -176,7 +179,9 @@
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Layout</property>
+                        <property name="label" translatable="yes">L_ayout</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">layout_cb</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -189,7 +194,7 @@
                     <child>
                       <object class="GtkComboBox" id="layout_cb">
                         <property name="visible">True</property>
-                        <property name="model">layout_ls</property>
+                        <signal name="changed" handler="on_layout_cb_changed"/>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext3"/>
                           <attributes>
@@ -220,6 +225,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="on_open_bt_clicked"/>
                             <child>
                               <object class="GtkLabel" id="label6">
                                 <property name="visible">True</property>
@@ -302,7 +308,8 @@
             <child type="label">
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Misc</property>
+                <property name="label" translatable="yes">_Misc</property>
+                <property name="use_underline">True</property>
               </object>
             </child>
           </object>
@@ -313,29 +320,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="tutor_ls">
-    <columns>
-      <!-- column-name id -->
-      <column type="gchararray"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="level_ls">
-    <columns>
-      <!-- column-name id -->
-      <column type="gchararray"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="layout_ls">
-    <columns>
-      <!-- column-name id -->
-      <column type="gchararray"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-    </columns>
   </object>
 </interface>

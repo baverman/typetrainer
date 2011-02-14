@@ -2,13 +2,14 @@ import sys
 
 from typetrainer.i18n import _
 
-available_tutors = {
-    'en.basic': _('Basic English'),
-    'en.advanced': _('Advanced English'),
-    'ru.basic': _('Basic Russian'),
-}
+from . import en, ru
+
+available_tutors = (en, ru)
 
 def get_filler(tutor, filename):
+    fullname = tutor
+    tutor, sep, level = tutor.partition('.')
+
     package_name = 'typetrainer.tutors.' + tutor
     __import__(package_name)
     pkg = sys.modules[package_name]
@@ -18,8 +19,11 @@ def get_filler(tutor, filename):
     else:
         text = _(u'Choose file with words.')
 
-    filler = pkg.get_filler(text, None)
+    filler = pkg.get_filler(text, level)
     filler.filename = filename
     filler.name = tutor
+    filler.level = level
+    filler.tutor = pkg
+    filler.fullname = fullname
 
     return filler

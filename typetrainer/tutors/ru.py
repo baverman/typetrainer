@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
 import re
-from ..common import Filler
+from .common import Filler
+
+from typetrainer.i18n import _
+
+name = 'ru'
+label = _('Russian')
+
+levels = (
+    ('basic', _('Basic')),
+#    ('advanced', _('Advanced')),
+#    ('superb', _('Superb')),
+)
 
 def make_lengths_seq(words):
     for t, w in words:
@@ -25,7 +36,7 @@ def split_to_words(text):
 
             yield 's', ' '
 
-def get_filler(text, options):
+def get_filler(text, level):
     words = list(split_to_words(text))
     if not words:
         words = list(split_to_words(u'Пустое упражнение. Выберите другое или загрузите '

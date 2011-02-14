@@ -1,5 +1,16 @@
 import re
-from ..common import Filler
+from .common import Filler
+
+from typetrainer.i18n import _
+
+name = 'en'
+label = _('English')
+
+levels = (
+    ('basic', _('Basic')),
+    ('advanced', _('Advanced')),
+#    ('superb', _('Superb')),
+)
 
 def make_lengths_seq(words):
     for t, w in words:
@@ -9,9 +20,18 @@ def make_lengths_seq(words):
         else:
             yield t, w
 
-def split_to_words(text):
+def split_to_words(text, level):
     filter_non_word = re.compile('(?i)[^a-z\']+')
-    for word in re.findall('(?i)[a-z\',.:;"]+', text):
+
+    charsets = {
+        'basic': '(?i)[a-z\',]+',
+        'advanced': '(?i)[a-z\',.:;"]+'
+    }
+
+    if level == 'basic':
+        text = text.lower()
+
+    for word in re.findall(charsets[level], text):
         non_word_cars = ',.:;"'
         esym = None
         for c in non_word_cars:
@@ -21,7 +41,7 @@ def split_to_words(text):
 
         ssym = '"' if word.startswith('"') else None
 
-        word = filter_non_word.sub('', word)
+        word = filter_non_word.sub('', word).strip("'")
         if word:
             if ssym:
                 yield 's', ssym
@@ -31,8 +51,10 @@ def split_to_words(text):
 
             yield 's', ' '
 
-def get_filler(text, options):
-    words = list(split_to_words(text))
+def get_filler(text, level):
+    words = list(split_to_words(text, level))
     if not words:
-        words = list(split_to_words(u'Tutor is empty. Select another or choose appropriate file.'))
+        words = list(split_to_words(
+            u'Tutor is empty. Select another or choose appropriate file.',
+            level))
     return Filler(words, make_lengths_seq)

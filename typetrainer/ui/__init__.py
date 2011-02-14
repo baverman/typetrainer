@@ -1,4 +1,5 @@
 import gtk, gobject
+import contextlib
 
 def idle_callback(callable, args):
     args, kwargs = args
@@ -15,6 +16,14 @@ def idle(callable, *args, **kwargs):
 def refresh_gui():
     while gtk.events_pending():
         gtk.main_iteration_do(block=False)
+
+@contextlib.contextmanager
+def block_handler(obj, handler):
+    obj.handler_block_by_func(handler)
+    try:
+        yield
+    finally:
+        obj.handler_unblock_by_func(handler)
 
 class BuilderAware(object):
     def __init__(self, glade_file):
