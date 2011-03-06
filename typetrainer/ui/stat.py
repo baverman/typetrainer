@@ -44,8 +44,11 @@ class StatDrawer(gtk.DrawingArea):
         maxdt = max(self.data).toordinal()
         mindt = maxdt - 30
 
-        mincpm = min(self.data.values(), key=lambda r: r[0])[0]
-        maxcpm = max(self.data.values(), key=lambda r: r[0])[0]
+        data = sorted((r for r in self.data.iteritems()
+            if r[0].toordinal() <= maxdt and r[0].toordinal() >= mindt - 2), key=lambda r: r[0])
+
+        mincpm = min(data, key=lambda r: r[1][0])[1][0]
+        maxcpm = max(data, key=lambda r: r[1][0])[1][0]
         gap = max(maxcpm - mincpm, 34)
 
         mincpm = int(max(mincpm - gap * 0.3, 0) / 10.0) * 10
@@ -62,8 +65,6 @@ class StatDrawer(gtk.DrawingArea):
 
         self.draw_grid(cr, mindt, maxdt, mincpm, maxcpm, hfactor)
 
-        data = sorted(self.data.iteritems(), key=lambda r: r[0])
-
         cr.set_source_rgb(0.2, 0.4, 0.2)
         cr.set_line_width(0.1)
 
@@ -74,6 +75,8 @@ class StatDrawer(gtk.DrawingArea):
         cr.new_sub_path()
         for i in range(len(data)-4):
             x = float(data[i+2][0].toordinal())
+            if x < mindt:
+                continue
             y = avg([r[1][0] for r in data[i:i+5]])
             cr.line_to(x, y*hfactor)
 
@@ -83,6 +86,8 @@ class StatDrawer(gtk.DrawingArea):
         cr.new_sub_path()
         for dt, (cpm, cnt) in data[2:-2]:
             x, y = float(dt.toordinal()), cpm * hfactor
+            if x <= mindt:
+                continue
             cr.arc(x, y, 0.2, 0, math.pi*2)
             cr.set_source_rgb(0.88627, 0.68627, 0.88627)
             cr.fill_preserve()
