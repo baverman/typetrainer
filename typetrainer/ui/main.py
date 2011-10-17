@@ -8,12 +8,13 @@ from typetrainer.i18n import _
 from typetrainer.ui import idle, refresh_gui, BuilderAware, block_handler, ShortcutActivator
 from typetrainer.util import join_to_file_dir
 from typetrainer.tutors import available_tutors, get_filler
-from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard
+from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard, anti_rsi_keyboard 
 
 available_keyboards = (
     (n130_keyboard, _('ASDF zones')),
     (n130_sdfv_keyboard, _('SDFV zones')),
     (n130_dvp_keyboard, _('Programmer Dvorak zones')),
+	(anti_rsi_keyboard, _('Anti-RSI zones')),
 )
 
 RHYTHM_ERROR_THRESHOLD = 1.7   # Miss value from average time gap between chars

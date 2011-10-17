@@ -85,6 +85,10 @@ msgstr "Зоны ЫВАМ"
 msgid "Programmer Dvorak zones"
 msgstr "Зоны программерского Дворака"
 
+#: ../typetrainer/ui/main.py:17
+msgid "Anti-RSI zones"
+msgstr "Зоны Anti-RSI"
+
 #: ../typetrainer/ui/main.py:277
 msgid "Open file..."
 msgstr "Открытие файла..."
