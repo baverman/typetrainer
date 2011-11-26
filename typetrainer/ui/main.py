@@ -8,7 +8,7 @@ from typetrainer.i18n import _
 from typetrainer.ui import idle, refresh_gui, BuilderAware, block_handler, ShortcutActivator
 from typetrainer.util import join_to_file_dir
 from typetrainer.tutors import available_tutors, get_filler
-from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard, anti_rsi_keyboard 
+from typetrainer.ui.kbd import n130_dvp_keyboard, n130_keyboard, n130_sdfv_keyboard, anti_rsi_keyboard
 
 available_keyboards = (
     (n130_keyboard, _('ASDF zones')),
@@ -37,7 +37,7 @@ class Main(BuilderAware):
         self.typed_chars = deque([], CHARS_HISTORY_LENGTH)
         self.errors = defaultdict(float)
 
-        self.vbox.pack_start(self.kbd_drawer, False)
+        self.vbox.pack_start(self.kbd_drawer, True, True)
         self.vbox.reorder_child(self.kbd_drawer, 3)
         self.kbd_drawer.set_size_request(-1, 280)
         self.kbd_drawer.show()
